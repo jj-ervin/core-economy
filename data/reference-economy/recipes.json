@@ -1,0 +1,9 @@
+[
+{"id":"coal_to_coke","output":"coke","output_amount":1,"inputs":[{"cargo":"coal","amount":1,"relationship":"required"}]},
+{"id":"iron_ore_coke_to_steel","output":"steel","output_amount":1,"inputs":[{"cargo":"iron_ore","amount":1,"relationship":"required"},{"cargo":"coke","amount":1,"relationship":"required"}]},
+{"id":"copper_ore_to_copper","output":"copper","output_amount":1,"inputs":[{"cargo":"copper_ore","amount":1,"relationship":"required"}]},
+{"id":"sand_to_glass","output":"glass","output_amount":1,"inputs":[{"cargo":"sand","amount":1,"relationship":"required"}]},
+{"id":"clay_to_ceramics","output":"ceramics","output_amount":1,"inputs":[{"cargo":"clay","amount":1,"relationship":"required"}]},
+{"id":"bauxite_to_aluminum","output":"aluminum","output_amount":1,"inputs":[{"cargo":"bauxite","amount":1,"relationship":"required"}]},
+{"id":"titanium_ore_to_titanium","output":"titanium","output_amount":1,"inputs":[{"cargo":"titanium_ore","amount":1,"relationship":"required"}]}
+]
