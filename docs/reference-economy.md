@@ -1,58 +1,18 @@
 # Reference Economy: 1700–2150
 
-## 1. Purpose
+## Canonical status
 
-This document defines the first concrete reference economy built on the OpenTTD Economic Framework.
-
-The framework defines the grammar. This document defines one economy that speaks that grammar.
-
-The reference economy spans **1700–2150** and is designed around three principles:
+This document is the normalized reference economy for the OpenTTD Economic Framework. It supersedes earlier wording where recipes or cargo identities were ambiguous.
 
 > **The economy comes first. Vehicles serve the economy.**
 >
 > **Simple rules. Deep logistics.**
 
-It is intended to be:
-
-- historically recognizable
-- modular
-- interconnected without becoming cargo soup
-- understandable to players
-- deep enough to reward network design
-- compatible with date-gated industry succession
-- suitable for future OpenTTD/NewGRF implementation
-
-This is a **reference design**, not yet an implementation specification.
+The economy uses stable cargo identities and historical industry succession. Technology changes production, labor intensity, supplies, and transport niches rather than creating unnecessary era-specific cargoes.
 
 ---
 
-# 2. Economic Architecture
-
-The reference economy uses five economic roles:
-
-```text
-PRIMARY RESOURCES
-        ↓
-     PRODUCTS
-        ↓
-   MARKETS / INDUSTRIES
-
-OPERATIONAL INPUTS ───────┐
-                          ↓
-                     INDUSTRIES
-                          ↑
-PERSONNEL ────────────────┘
-```
-
-Financial flows are optional and modular.
-
-The economy is intentionally built around a limited number of stable cargo identities. Historical and technological change is represented primarily through industry states, production behavior, operational inputs, personnel demand, and transportation niches.
-
----
-
-# 3. Core Cargo Set
-
-The initial reference economy should begin with a deliberately constrained cargo vocabulary.
+# 1. Core Cargo Vocabulary
 
 ## Primary Resources
 
@@ -73,6 +33,8 @@ The initial reference economy should begin with a deliberately constrained cargo
 - Food
 - Lumber
 - Steel
+- Copper
+- Petroleum Products
 - Machinery
 - Chemicals
 - Manufactured Goods
@@ -91,7 +53,10 @@ The initial reference economy should begin with a deliberately constrained cargo
 
 - Passengers
 - Personnel
+- Returning Personnel
 - Mail
+
+`Returning Personnel` is a flow state/implementation concept, not necessarily a separate cargo identity. The canonical human-flow identity is Personnel unless the NewGRF adapter requires another representation.
 
 ## Optional Financial Flows
 
@@ -100,484 +65,13 @@ The initial reference economy should begin with a deliberately constrained cargo
 - Coins / Cash
 - Securities / Financial Documents
 
-The final implementation may adjust this list after network testing. A cargo should be added only when it creates a meaningful economic distinction.
+Financial cargo remains optional and does not automatically create money.
 
 ---
 
-# 4. Primary Resource Families
+# 2. Core Production Chains
 
-## 4.1 Agriculture
-
-Primary outputs:
-
-```text
-Farm → Grain
-Farm → Livestock
-```
-
-Agriculture is one of the foundational economic systems across the entire timeline.
-
-Industry succession:
-
-```text
-Traditional Farm
-      ↓
-Mechanized Farm
-      ↓
-Modern / Precision Farm
-      ↓
-Automated Farm
-```
-
-Operational inputs evolve from primarily Agricultural Supplies toward combinations of Agricultural Supplies, Industrial Equipment, and Technology Systems.
-
-Personnel demand declines as mechanization and automation increase.
-
----
-
-## 4.2 Forestry
-
-```text
-Forest
-  ↓
-Timber
-  ↓
-Sawmill
-  ↓
-Lumber
-```
-
-Forestry supports:
-
-- construction
-- shipbuilding
-- furniture/manufacturing
-- paper-related optional modules
-- fuel/biomass optional modules
-
-Industry succession:
-
-```text
-Traditional Forestry
-      ↓
-Industrial Forestry
-      ↓
-Mechanized Forestry
-      ↓
-Precision / Sustainable Forestry
-```
-
----
-
-## 4.3 Fisheries
-
-```text
-Fishing Grounds
-      ↓
-     Fish
-      ↓
-Food Processing
-      ↓
-     Food
-```
-
-Fishing begins as a coastal activity and later develops into larger commercial and offshore operations.
-
-Transportation progression may include:
-
-- fishing boats
-- coastal fishing vessels
-- commercial fishing fleets
-- refrigerated logistics
-- advanced fishing vessels
-
----
-
-## 4.4 Coal
-
-```text
-Coal Mine
-    ↓
-   Coal
-    ↓
-Steel / Energy / Industrial Uses
-```
-
-Coal is especially important during the Transformation and Acceleration eras.
-
-Its economic importance should decline as electricity, petroleum, and later cleaner energy systems expand, but existing coal industries should not simply vanish on a date.
-
----
-
-## 4.5 Iron Ore
-
-```text
-Iron Mine
-    ↓
-Iron Ore
-    ↓
-Steel Mill
-    ↓
-Steel
-```
-
-Iron and steel form a major backbone of industrialization.
-
----
-
-## 4.6 Stone and Clay
-
-```text
-Quarry → Stone
-Clay Pit → Clay
-```
-
-These resources support:
-
-- Construction Materials
-- ceramics
-- infrastructure
-- industrial processing
-
-They provide useful short- and medium-distance bulk transport opportunities.
-
----
-
-## 4.7 Oil and Gas
-
-```text
-Oil Field / Offshore Platform
-              ↓
-             Oil
-              ↓
-          Refinery
-              ↓
-        Chemicals / Fuels
-```
-
-Gas can support:
-
-- Chemicals
-- electricity/energy modules
-- industrial processes
-- future hydrogen pathways
-
-Oil becomes increasingly important during the Acceleration era and remains economically relevant even as alternatives emerge.
-
----
-
-## 4.8 Copper Ore
-
-```text
-Copper Mine
-     ↓
-Copper Ore
-     ↓
-Metal / Component Processing
-     ↓
-Electronics / Machinery
-```
-
-Copper becomes increasingly important with electrification and electronics.
-
----
-
-# 5. Processing Industries
-
-## 5.1 Mill / Food Processing
-
-```text
-Grain + Livestock + Fish
-            ↓
-      Food Processing
-            ↓
-           Food
-```
-
-Not every location needs to accept every input. Regional specialization can be introduced through industry variants without creating new cargo types.
-
----
-
-## 5.2 Sawmill
-
-```text
-Timber
-  ↓
-Sawmill
-  ↓
-Lumber
-```
-
-Lumber feeds construction and manufacturing.
-
----
-
-## 5.3 Steel Mill
-
-```text
-Iron Ore + Coal
-          ↓
-      Steel Mill
-          ↓
-         Steel
-```
-
-Later technology may reduce coal dependence or introduce alternative processing pathways through optional energy/industrial modules.
-
----
-
-## 5.4 Refinery
-
-```text
-Oil
- ↓
-Refinery
- ↓
-Chemicals
-```
-
-The refinery is a major industrial hub and becomes increasingly connected to manufacturing, transport, agriculture, and energy.
-
----
-
-## 5.5 Chemical Works
-
-```text
-Oil / Gas + Industrial Inputs
-              ↓
-        Chemical Works
-              ↓
-          Chemicals
-```
-
-Chemicals support:
-
-- Agriculture
-- Manufacturing
-- advanced materials
-- future energy systems
-
----
-
-# 6. Manufacturing Core
-
-The reference economy uses a small number of broad manufacturing outputs rather than a huge catalog of finished goods.
-
-## 6.1 Machinery
-
-Inputs may include:
-
-```text
-Steel
-Lumber
-Copper / processed metals
-Chemicals
-Personnel
-Industrial Equipment
-```
-
-Output:
-
-```text
-Machinery
-```
-
-Machinery supports farms, mines, factories, ports, and infrastructure.
-
----
-
-## 6.2 Manufactured Goods
-
-```text
-Steel + Lumber + Chemicals + Machinery + Personnel
-                    ↓
-               Factory
-                    ↓
-          Manufactured Goods
-```
-
-Manufactured Goods represent a broad market category and should not be subdivided without a strong gameplay reason.
-
----
-
-## 6.3 Electronics
-
-Electronics become important primarily during the late Acceleration and Convergence eras.
-
-Possible inputs:
-
-```text
-Copper / processed metals
-Chemicals
-Machinery
-Technology Systems
-Personnel
-```
-
-Output:
-
-```text
-Electronics
-```
-
-Electronics then support advanced manufacturing, automation, logistics, and optional future systems.
-
----
-
-## 6.4 Advanced Goods
-
-Advanced Goods are a deliberately broad late-era category.
-
-Potential inputs:
-
-- Electronics
-- Chemicals
-- Advanced materials
-- Machinery
-- Technology Systems
-- Personnel
-
-They should not become a catch-all cargo for every futuristic object. Their purpose is to represent economically meaningful high-complexity manufactured outputs without exploding the cargo list.
-
----
-
-# 7. Operational Input Economy
-
-Operational inputs are central to the framework because they make industries into maintained economic systems rather than static production boxes.
-
-## 7.1 Tools & Hardware
-
-Represents:
-
-- hand tools
-- replacement parts
-- basic hardware
-- maintenance materials
-- workshop supplies
-
-Broadly available from the early economy onward.
-
-Likely consumers:
-
-- farms
-- mines
-- forestry
-- workshops
-- ports
-- factories
-
----
-
-## 7.2 Industrial Equipment
-
-Represents:
-
-- heavy machinery
-- production equipment
-- pumps
-- industrial systems
-- replacement machinery
-
-Its importance grows with industrialization.
-
-Typical consumers:
-
-- mines
-- factories
-- ports
-- shipyards
-- offshore facilities
-- large farms
-
----
-
-## 7.3 Construction Materials
-
-Represents a broad infrastructure/construction input category.
-
-Possible source industries include:
-
-- sawmills
-- steel mills
-- quarries
-- cement/construction-material processors in an optional detailed module
-
-Consumers include:
-
-- farms
-- mines
-- factories
-- ports
-- rail infrastructure
-- offshore construction
-- urban development
-
----
-
-## 7.4 Agricultural Supplies
-
-Represents:
-
-- fertilizer
-- seed/input packages
-- agricultural chemicals
-- crop treatment supplies
-- farm consumables
-
-Its technology changes through time while its economic identity remains stable.
-
----
-
-## 7.5 Technology Systems
-
-Represents:
-
-- control systems
-- sensors
-- computing hardware
-- communications equipment
-- automation systems
-- advanced industrial electronics
-
-Technology Systems become increasingly important during the Convergence era.
-
----
-
-# 8. Personnel Economy
-
-Personnel connects population geography to industrial capacity.
-
-The reference economy treats Personnel as labor transport, not ordinary passenger movement.
-
-Examples:
-
-```text
-Town → Personnel → Mine
-Town → Personnel → Farm
-City → Personnel → Factory
-Coastal City → Personnel → Offshore Platform
-Research Hub → Personnel → Research Facility
-```
-
-Personnel demand generally declines as automation increases, but remote and specialized operations retain meaningful labor requirements.
-
-Returnable Personnel can create productive round trips:
-
-```text
-Personnel + Supplies
-        ↓
-     Worksite
-        ↓
-Product + Returning Personnel
-```
-
----
-
-# 9. The Core Production Web
-
-The reference economy is built around several major economic spines.
-
-## Spine A — Food
+## Food
 
 ```text
 Grain ─────┐
@@ -585,392 +79,341 @@ Livestock ─┼→ Food Processing → Food → Towns
 Fish ──────┘
 ```
 
-## Spine B — Construction / Industrialization
+Food Processing uses an **alternative-feedstock** model: a configured plant may accept one or more of Grain, Livestock, and Fish. “And/or” is not a recipe type.
+
+## Forestry / Construction
 
 ```text
-Timber → Lumber ─────┐
-                     ├→ Construction / Manufacturing
-Stone ───────────────┤
-Iron Ore + Coal → Steel ─┘
+Timber → Sawmill → Lumber ─────┐
+Stone ─────────────────────────┤
+Clay ──────────────────────────┼→ Construction Materials
+Steel ─────────────────────────┘
 ```
 
-## Spine C — Machinery
+Clay is a **core** resource. Construction Materials uses Clay as a defined component; exact proportions remain a balancing parameter.
+
+## Steel
 
 ```text
-Steel + Copper + Chemicals
-            ↓
-         Machinery
-            ↓
- Farms / Mines / Factories / Ports
+Iron Ore + Coal → Steel Mill → Steel
 ```
 
-## Spine D — Petroleum / Chemicals
+Later steel technologies may use an approved alternative energy pathway through an optional Energy module.
+
+## Copper
 
 ```text
-Oil + Gas
-   ↓
-Refinery / Chemical Works
-   ↓
-Chemicals
-   ↓
-Agriculture / Manufacturing / Advanced Industry
+Copper Ore → Copper Works → Copper
+                              ├→ Machinery
+                              └→ Electronics
 ```
 
-## Spine E — Electronics / Automation
+Copper is a stable **PRODUCT**. There is no core “processed copper” cargo.
+
+## Petroleum / Chemicals
 
 ```text
-Copper + Chemicals + Machinery
-              ↓
-          Electronics
-              ↓
-       Technology Systems
-              ↓
-Automation / Advanced Industry
+Oil → Refinery → Petroleum Products → Chemical Works → Chemicals
+Gas ────────────────────────────────────────┘
 ```
 
-These spines intersect but do not require every cargo to feed every industry.
+The gas branch is allowed only through an explicitly defined gas-feedstock recipe. Raw Oil is not a normal Chemical Works input.
 
----
+**Refinery and Chemical Works are distinct:**
 
-# 10. Productive Round Trips
+- Refinery = petroleum processing.
+- Chemical Works = chemical manufacturing from defined feedstocks.
 
-A major design objective is to create routes where outbound and return cargoes both make economic sense.
+Fuel may later be split from Petroleum Products by an optional Energy/Transport module.
 
-## Mine
+## Machinery
 
 ```text
-OUT
-Personnel + Tools & Hardware
-          ↓
-        Mine
-          ↓
-RETURN
-Coal + Returning Personnel
+Steel + Copper
+      ↓
+Machinery Works
+      ↓
+Machinery
 ```
 
-## Farm
+Chemicals may be an optional/preferred input in the base Machinery recipe and can become required in advanced variants.
+
+## Manufactured Goods
 
 ```text
-OUT
-Personnel + Agricultural Supplies
-          ↓
-         Farm
-          ↓
-RETURN
-Grain / Livestock + Returning Personnel
+Steel + Lumber
+      ↓
+Factory
+      ↓
+Manufactured Goods
 ```
 
-## Factory
+Machinery, Chemicals, and Electronics are preferred or required in later factory states rather than being universally mandatory from the beginning.
+
+## Electronics
 
 ```text
-OUT
-Personnel + Industrial Equipment
-          ↓
-       Factory
-          ↓
-RETURN
-Manufactured Goods + Returning Personnel
-```
-
-## Offshore Platform
-
-```text
-OUT
-Personnel + Industrial Equipment + Construction Materials
-                         ↓
-                  Offshore Platform
-                         ↓
-RETURN
-Oil / Gas + Returning Personnel
-```
-
-Not every route must be balanced. Empty returns remain legitimate.
-
----
-
-# 11. Historical Economy: 1700–1850
-
-## Core network
-
-```text
-Farms / Forests / Fisheries / Mines
-              ↓
-        Local Processing
-              ↓
-        Towns / Ports
-```
-
-Major cargoes:
-
-- Grain
-- Livestock
-- Timber
-- Fish
-- Coal
-- Iron Ore
-- Stone
-- Clay
-- Food
-- Lumber
-- Steel
-- Tools & Hardware
-- Construction Materials
-- Personnel
-
-Technology characteristics:
-
-- manual labor
-- animal power
-- sailing
-- canals
-- early steam
-- early rail
-
-Personnel demand is generally high.
-
----
-
-# 12. Historical Economy: 1851–1900
-
-The industrial web expands.
-
-New emphasis:
-
-- Steel
-- Machinery
-- Coal
-- Petroleum
-- Chemicals
-- industrial ports
-- rail corridors
-- steamships
-
-Representative chain:
-
-```text
-Coal + Iron Ore
+Copper + Chemicals
        ↓
-     Steel
+Electronics Factory
        ↓
-   Machinery
-       ↓
-Industrial Expansion
+Electronics
 ```
 
-Personnel remains important, while mechanization begins reducing labor intensity in selected industries.
+Machinery can be a preferred input. Advanced electronics increasingly depend on Technology Systems operational supply.
 
----
-
-# 13. Historical Economy: 1901–1950
-
-The economy enters mass production.
-
-Major developments:
-
-- petroleum refining
-- chemicals
-- motor transport
-- modern factories
-- electrical systems
-- aviation
-- large ports
-- offshore petroleum
-
-Representative web:
+## Advanced Goods
 
 ```text
-Oil → Refinery → Chemicals
-                    ↓
-Steel → Machinery → Factory → Manufactured Goods
-                    ↑
-                Personnel
+Electronics + Chemicals + Machinery
+                ↓
+Advanced Manufacturing
+                ↓
+Advanced Goods
 ```
 
----
-
-# 14. Historical Economy: 1951–1970
-
-The economy becomes highly industrialized and increasingly global.
-
-Key systems:
-
-- containerization
-- deepwater ports
-- diesel transport
-- large offshore platforms
-- modern logistics
-- mass consumer manufacturing
-
-The port becomes a major economic organism rather than simply a place where ships stop.
+Advanced Goods remain intentionally broad.
 
 ---
 
-# 15. Historical Economy: 1971–2000
+# 3. Operational Supply Economy
 
-Global logistics becomes a central economic feature.
+Operational supplies are productivity modifiers rather than universal hard prerequisites.
 
-Representative network:
+Typical progression:
 
 ```text
-Resource Region
-      ↓
-Global Transport
-      ↓
-Specialized Processing
-      ↓
-Manufacturing Hub
-      ↓
-Container Port
-      ↓
-Global Market
+Early        → Tools & Hardware
+Industrial   → Tools + Industrial Equipment
+Modern       → Industrial Equipment + Technology Systems
+Automated    → Technology Systems + reduced Personnel
 ```
 
-Electronics begin to become a major product category.
+Supply service levels remain:
 
-Technology Systems emerge as an increasingly important operational input.
+- None → base production
+- Regular → production bonus
+- Excellent → maximum intended productivity
+
+Provisional targets remain 100%, 115–125%, and 135–150% respectively and require playtesting.
+
+### Supply producers
+
+```text
+Lumber / Steel
+      ↓
+General Works
+      ↓
+Tools & Hardware
+```
+
+```text
+Steel + Machinery
+      ↓
+Industrial Equipment Works
+      ↓
+Industrial Equipment
+```
+
+```text
+Stone + Clay + Lumber + Steel
+      ↓
+Construction Materials Works
+      ↓
+Construction Materials
+```
+
+```text
+Chemicals + Machinery
+      ↓
+Agricultural Supply Works
+      ↓
+Agricultural Supplies
+```
+
+```text
+Electronics + Machinery + Chemicals
+      ↓
+Technology Systems Works
+      ↓
+Technology Systems
+```
+
+The exact proportional recipes remain implementation/balance parameters. Supply-production graphs must remain acyclic.
 
 ---
 
-# 16. Convergence Economy: 2001–2030
+# 4. Personnel Economy
 
-Major transitions:
-
-- digital logistics
-- renewable energy
-- precision agriculture
-- automated warehouses
-- advanced manufacturing
-- offshore wind
-- batteries
-- increasingly autonomous transport
-
-Representative agriculture progression:
+Personnel is a human-flow layer distinct from Passengers.
 
 ```text
-Traditional / Modern Farm
+Town / Personnel Source
         ↓
-Precision Farm
+     Personnel
         ↓
-Lower Personnel demand
+      Worksite
         ↓
-Higher Technology Systems dependence
+ Returning Personnel
 ```
 
----
+Personnel demand is tied to industry scale and labor intensity. It generally declines as mechanization and automation increase.
 
-# 17. Convergence Economy: 2031–2050
-
-Major systems may include:
-
-- electric transport
-- autonomous logistics
-- advanced batteries
-- offshore wind
-- hydrogen systems
-- highly automated factories
-- remote industrial operations
-
-Potential chain:
+Productive round trips are encouraged:
 
 ```text
-Industrial Equipment + Technology Systems
-                 ↓
-          Offshore Wind Farm
-                 ↓
-             Electricity
-                 ↓
-       Hydrogen / Industry
+OUT: Personnel + operational inputs
+             ↓
+          Worksite
+             ↓
+RETURN: Product + Personnel
 ```
 
-Electricity may be introduced as an optional dedicated cargo/system module rather than automatically becoming a core cargo.
+Not every worksite must return Personnel and not every transport route needs a return cargo.
 
 ---
 
-# 18. Convergence Economy: 2051–2100
-
-The economy becomes increasingly autonomous.
-
-Representative industries:
-
-- automated mines
-- autonomous farms
-- robotic factories
-- smart ports
-- offshore energy complexes
-- advanced research facilities
-
-Personnel remains relevant for:
-
-- oversight
-- maintenance
-- engineering
-- research
-- exceptional operations
-- remote-site work
-
----
-
-# 19. Convergence Economy: 2101–2150
-
-This is the most speculative reference period.
-
-Possible systems:
-
-- highly autonomous industrial networks
-- advanced energy systems
-- integrated offshore complexes
-- advanced materials
-- large-scale space infrastructure
-- autonomous logistics
-
-These should remain modular.
-
-The historical core should remain fully playable without them.
-
----
-
-# 20. Industry Succession Families
-
-The reference economy uses succession families rather than isolated date-gated replacements.
+# 5. Industry Families
 
 ## Agriculture
 
 ```text
-Traditional Farm
- → Mechanized Farm
- → Precision Farm
- → Automated Farm
+Traditional Farm       1700–1850
+        ↓
+Mechanized Farm        1800–1950
+        ↓
+Precision Farm         1980–2045
+        ↓
+Automated Farm         2035–2150
 ```
 
 ## Forestry
 
 ```text
-Traditional Forestry
- → Industrial Forestry
- → Mechanized Forestry
- → Precision Forestry
+Traditional Forestry   1700–1850
+        ↓
+Industrial Forestry    1800–1950
+        ↓
+Mechanized Forestry    1920–2000
+        ↓
+Precision Forestry     1980–2150
 ```
 
-## Mining
+## Fisheries
 
 ```text
-Traditional Mine
- → Industrial Mine
- → Mechanized Mine
- → Automated Mine
+Coastal Fishery        1700–1900
+        ↓
+Commercial Fishery     1850–1970
+        ↓
+Advanced Fishery       1970–2150
 ```
 
-## Manufacturing
+## Coal
 
 ```text
-Workshop
- → Factory
- → Mass-Production Factory
- → Automated Factory
- → Advanced Manufacturing
+Early Coal Mine        1700–1900
+        ↓
+Mechanized Coal Mine   1850–2000
+        ↓
+Modern Coal Mine       1950–2150
 ```
 
-## Port
+## Copper
+
+```text
+Copper Mine             1850–2150
+        ↓
+Automated Copper Mine  2030–2150
+```
+
+```text
+Copper Works            1850–2150
+        ↓
+Automated Copper Works 1980–2150
+```
+
+## Petroleum
+
+```text
+Onshore Oil Field      1850–2150
+Offshore Oil Platform  1930–2100
+Advanced Offshore      2000–2150
+```
+
+## Processing
+
+```text
+Food Processing
+Sawmill
+Steel Mill
+Refinery
+Chemical Works
+Copper Works
+```
+
+Each has technology successors where production behavior materially changes.
+
+---
+
+# 6. Historical Progression
+
+## 1700–1850 — Transformation
+
+Core systems:
+
+- agriculture
+- forestry
+- fisheries
+- coal and iron
+- stone and clay
+- local food processing
+- sawmills
+- early steel
+- sailing and canals
+- early steam
+- high Personnel intensity
+
+The network should favor regional and short-to-medium distance bulk movements.
+
+## 1851–2000 — Acceleration
+
+Major additions:
+
+- mechanized extraction
+- steel and machinery at scale
+- copper processing
+- petroleum refining
+- chemical manufacturing
+- mass factories
+- steamships and rail
+- modern ports
+- offshore petroleum
+- containerization
+- electronics
+
+## 2001–2150 — Convergence
+
+Major additions:
+
+- precision and automated agriculture
+- automated extraction
+- advanced copper processing
+- smart ports
+- autonomous logistics
+- offshore wind
+- advanced manufacturing
+- research
+- optional hydrogen/electricity systems
+- optional space systems
+
+Future systems remain modular and cannot be required to complete the historical core economy.
+
+---
+
+# 7. Ports and Maritime Economy
+
+Port succession:
 
 ```text
 Trading Wharf
@@ -982,642 +425,171 @@ Trading Wharf
  → Smart / Mega Port
 ```
 
+Specialized ports may include Fishing Harbor, Oil Port, Shipbuilding Port, and Offshore Supply Base.
+
+Ports create meaningful consolidation and transfer choices rather than simply being cosmetic station variants.
+
+---
+
+# 8. Offshore Economy
+
+Petroleum:
+
+```text
+Engineering / Construction Inputs
+          ↓
+Supply Port / Offshore Base
+          ↓
+Offshore Platform
+          ↓
+Oil / Gas
+```
+
+Offshore wind:
+
+```text
+Industrial Equipment + Construction Materials
+                  ↓
+          Offshore Wind Farm
+                  ↓
+       Electricity* / Energy Service
+```
+
+`*` Electricity is optional.
+
+Offshore facilities deliberately create personnel, equipment, construction, and return-cargo opportunities.
+
+---
+
+# 9. Geography
+
+Primary resources are strongly geography-dependent:
+
+- farms → fertile land
+- forests → forest regions
+- fish → coast/water
+- coal → coal geology
+- iron → iron-bearing geology
+- copper → copper-bearing geology
+- stone → quarry geology
+- clay → clay-bearing regions
+- oil/gas → petroleum geology/offshore fields
+
+Processing tends toward resource proximity, transport corridors, ports, cities, and industrial clusters.
+
+Advanced industry increasingly clusters around cities, skilled labor, logistics hubs, and research centers.
+
+---
+
+# 10. Network Complexity Rules
+
+The reference economy should be moderately interconnected without becoming cargo soup.
+
+Rules:
+
+- Core chains should normally remain understandable by inspection.
+- No core chain should require six or more mandatory intermediate cargo transformations merely to function.
+- Most industries should have 0–4 meaningful hard inputs.
+- Advanced industries may reach five only when the added logistics has clear gameplay value.
+- Operational supplies are not counted as hard inputs unless a module explicitly changes that rule.
+- Every core cargo must have a defined source and consumer, except explicit endpoints/human flows/optional cargoes.
+- No undefined cargo names such as “processed copper” may appear in canonical recipes.
+- Recipe relationships must use explicit semantics: required, proportional, preferred, alternative, optional.
+- Supply-production dependency graphs must be acyclic.
+
+---
+
+# 11. Core Round-Trip Examples
+
+## Mine
+
+```text
+Personnel + Tools & Hardware
+          ↓
+        Mine
+          ↓
+Coal / Iron Ore / Copper Ore + Personnel
+```
+
+## Farm
+
+```text
+Personnel + Agricultural Supplies
+          ↓
+         Farm
+          ↓
+Grain / Livestock + Personnel
+```
+
+## Copper
+
+```text
+Copper Ore + Personnel + Industrial Equipment service
+                    ↓
+              Copper Works
+                    ↓
+            Copper + Personnel
+```
+
 ## Offshore
 
 ```text
-Coastal Fishing
- → Offshore Petroleum
- → Large Offshore Complex
- → Offshore Wind
- → Floating Wind
- → Integrated Offshore Energy
+Personnel + Industrial Equipment + Construction Materials
+                         ↓
+                  Offshore Platform
+                         ↓
+              Oil / Gas + Personnel
 ```
 
 ---
 
-# 21. Industry Availability Windows
+# 12. Optional Modules
 
-Approximate reference windows:
+The following may extend the reference economy without becoming mandatory:
 
-| Industry family | First appearance | Mature period | Successor / later state |
-|---|---:|---:|---|
-| Traditional Farm | 1700 | 1700–1850 | Mechanized Farm |
-| Mechanized Farm | 1800+ | 1850–1950 | Precision Farm |
-| Precision Farm | 1950+ | 2000+ | Automated Farm |
-| Traditional Mine | 1700 | 1700–1850 | Industrial Mine |
-| Industrial Mine | 1800+ | 1850–1950 | Mechanized Mine |
-| Mechanized Mine | 1900+ | 1950–2000 | Automated Mine |
-| Automated Mine | 2000+ | 2030+ | Advanced/Autonomous |
-| Workshop | 1700 | 1700–1850 | Factory |
-| Factory | 1800+ | 1850–1950 | Mass Production |
-| Mass-Production Factory | 1900+ | 1950–2000 | Automated Factory |
-| Automated Factory | 1970+ | 2000+ | Advanced Manufacturing |
-| Trading Wharf | 1700 | 1700–1800 | Commercial Harbor |
-| Commercial Harbor | 1750+ | 1800s | Industrial Port |
-| Industrial Port | 1850+ | 1900s | Deepwater Port |
-| Deepwater Port | 1950+ | 1950–1970 | Container Port |
-| Container Port | 1970+ | 1980+ | Smart / Mega Port |
-| Offshore Petroleum | 1900+ | 1950–2000 | Advanced Offshore |
-| Offshore Wind | 2000+ | 2010+ | Floating Wind |
-| Floating Wind | 2030+ | 2050+ | Integrated Energy |
-
-Dates are gameplay design windows and should be tuned during implementation and testing.
-
----
-
-# 22. Port Economy
-
-Ports connect local, regional, and global economies.
-
-## General progression
-
-```text
-Trading Wharf
-    ↓
-Commercial Harbor
-    ↓
-Industrial Port
-    ↓
-Deepwater Port
-    ↓
-Container Port
-    ↓
-Smart / Mega Port
-```
-
-## Specialized ports
-
-- Fishing Harbor
-- Industrial Port
-- Oil Port
-- Shipbuilding Port
-- Offshore Supply Base
-- Container Port
-
-A specialized port should create a meaningful network role.
-
----
-
-# 23. Offshore Economy
-
-Offshore operations create high-value remote logistics.
-
-## Petroleum
-
-```text
-Engineering Works
-       ↓
-Industrial Equipment
-       ↓
-Supply Port
-       ↓
-Offshore Transport
-       ↓
-Offshore Platform
-       ↓
-Oil / Gas
-       ↓
-Refinery
-```
-
-## Offshore Wind
-
-```text
-Component / Equipment Factory
-          ↓
-Offshore Equipment
-          ↓
-Construction Port
-          ↓
-Heavy-Lift Vessel
-          ↓
-Offshore Wind Farm
-          ↓
-Electricity
-```
-
-Electricity may remain an optional energy module until implementation testing establishes whether a dedicated energy cargo improves gameplay.
-
----
-
-# 24. Finance Module
-
-Finance is optional but can provide a distinctive high-value logistics layer.
-
-Potential progression:
-
-```text
-1700 → Gold / Coins
-1850 → Gold / Coins / Banknotes / Documents
-1950 → Cash / Securities / Documents
-2000 → Secure high-value logistics
-2050+ → Digital finance + physical high-value assets
-```
-
-Systemic money remains systemic.
-
-Physical financial cargo represents the logistics of moving valuable physical assets, not the creation of money.
-
----
-
-# 25. Mail
-
-Mail is a supporting economic flow across the timeline.
-
-Mail should primarily represent:
-
-- communications
-- documents
-- commercial correspondence
-- administrative information
-- later high-value information logistics
-
-Mail is distinct from Personnel and Passengers.
-
----
-
-# 26. Passenger Economy
-
-Passengers represent ordinary human travel.
-
-The passenger economy is connected to industrial growth but is not the same as the Personnel economy.
-
-Industrialization can increase passenger demand through:
-
-- urbanization
-- commuting
-- commerce
-- education
-- tourism
-- migration
-
-Personnel represents labor assigned to productive worksites.
-
-This distinction allows one city to simultaneously be:
-
-```text
-Passenger Source
-Personnel Source
-Mail Source
-Industrial Market
-```
-
----
-
-# 27. Economic Geography
-
-The reference economy should generate geographic specialization.
-
-Examples:
-
-```text
-Agricultural Region
-      ↓
-Grain / Livestock
-      ↓
-Food Processing Hub
-      ↓
-Cities
-```
-
-```text
-Mining Region
-      ↓
-Ore / Coal
-      ↓
-Steel / Machinery Hub
-      ↓
-Manufacturing Region
-```
-
-```text
-Coastal City
-      ↓
-Personnel + Equipment
-      ↓
-Offshore Industry
-      ↓
-Oil / Gas / Energy
-      ↓
-Port
-```
-
-Geography is therefore part of the economy rather than decoration.
-
----
-
-# 28. Network Complexity Targets
-
-The reference economy should be **moderately interconnected**.
-
-Target characteristics:
-
-- most primary resources have at least one meaningful processing destination
-- important products feed multiple economic sectors
-- operational inputs create return and support traffic
-- Personnel connects population centers to worksites
-- ports connect regional and global networks
-- some industries support multiple industries
-- no single cargo should become a universal prerequisite
-
-The target is:
-
-```text
-Deep enough to reward planning
-Simple enough to understand
-```
-
----
-
-# 29. Dependency Limits
-
-Avoid chains where every industry requires many unrelated inputs.
-
-Preferred:
-
-```text
-Mine
-├── Personnel
-├── Tools & Hardware
-└── Industrial Equipment
-      ↓
-    Ore
-```
-
-Avoid:
-
-```text
-Mine
-├── Personnel
-├── Food
-├── Mail
-├── Chemicals
-├── Electronics
-├── Construction Materials
-├── Machinery
-├── Fuel
-├── Financial Documents
-└── five other mandatory cargos
-```
-
-The latter produces cargo soup and obscures the economic purpose of the industry.
-
----
-
-# 30. Supply Service Philosophy
-
-Operational supplies should generally behave as productivity services.
-
-Conceptually:
-
-```text
-No supply      → Base production
-Regular supply → Enhanced production
-Excellent      → Maximum intended productivity
-```
-
-This should usually apply to:
-
-- Tools & Hardware
-- Industrial Equipment
-- Construction Materials
-- Agricultural Supplies
-- Technology Systems
-
-Not every industry accepts every supply.
-
----
-
-# 31. Personnel Service Philosophy
-
-Personnel is similar to an operational service but remains economically distinct because it represents labor.
-
-Conceptually:
-
-```text
-No Personnel       → constrained operation
-Partial Personnel  → reduced capacity
-Regular Personnel  → normal capacity
-Excellent Staffing → intended maximum
-```
-
-Automation changes the amount of Personnel needed for a given capacity.
-
----
-
-# 32. Technology Progression Matrix
-
-| Period | Labor | Machinery | Technology Systems | Logistics |
-|---|---|---|---|---|
-| 1700–1850 | High | Low/medium | Minimal | Local/regional |
-| 1851–1900 | High/medium | Rising | Low | National/regional |
-| 1901–1950 | Medium | High | Emerging | National/global |
-| 1951–1970 | Medium | High | Rising | Global |
-| 1971–2000 | Medium/low | High | High | Global/containerized |
-| 2001–2030 | Lower | High | Very high | Digital/global |
-| 2031–2050 | Low | High | Very high | Increasingly autonomous |
-| 2051–2100 | Low | Very high | Dominant | Autonomous |
-| 2101–2150 | Very low routine labor | Very high | Dominant | Highly autonomous |
-
-This is a directional model, not a numerical balance table.
-
----
-
-# 33. What Changes Through Time
-
-The reference economy should change through five primary dimensions:
-
-### 1. Industry availability
-
-New industry types and successors appear.
-
-### 2. Production technology
-
-Existing economic activities become more productive or differently structured.
-
-### 3. Personnel demand
-
-Automation reduces routine labor requirements.
-
-### 4. Operational inputs
-
-Industries increasingly depend on equipment and technology systems.
-
-### 5. Transportation niches
-
-Vehicles evolve to serve different combinations of capacity, speed, geography, cost, and cargo.
-
-These five dimensions should do most of the historical work.
-
----
-
-# 34. What Does Not Automatically Change
-
-The following should remain stable unless a gameplay reason exists to change them:
-
-- core cargo identity
-- economic role of cargo
-- basic distinction between Passenger and Personnel
-- distinction between products and operational inputs
-- industry economic identity
-- existence of systemic money
-- framework modularity
-
-Stability prevents historical evolution from becoming semantic chaos.
-
----
-
-# 35. Core vs Optional Economy
-
-## Core
-
-The first implementation should prioritize:
-
-- Agriculture
-- Forestry
-- Fisheries
-- Coal
-- Iron
-- Stone / Clay
-- Oil / Gas
-- Steel
-- Food
-- Lumber
-- Machinery
-- Chemicals
-- Manufactured Goods
-- Personnel
-- Passengers
-- Mail
-- Operational supplies
-- Ports
-
-## Optional
-
-Later modules may add:
-
-- Copper/electronics depth
-- Energy grid
+- Energy
+- Detailed construction / ceramics
+- Global logistics refinements
 - Recycling
 - Finance
-- Advanced Technology
-- Offshore Wind
-- Hydrogen
+- Research / advanced technology
 - Space
-- advanced materials
 
-The core economy must remain coherent without optional modules.
-
----
-
-# 36. Implementation Order
-
-The reference economy should be implemented incrementally.
-
-### Phase 1 — Economic skeleton
-
-Implement:
-
-- core primary resources
-- core processing
-- basic products
-- Passengers
-- Personnel
-- basic operational supplies
-
-### Phase 2 — Industrial depth
-
-Add:
-
-- Machinery
-- Chemicals
-- Manufacturing
-- expanded ports
-- industrial equipment
-
-### Phase 3 — Historical succession
-
-Add:
-
-- industry technology states
-- date gates
-- overlap
-- legacy industries
-- automation progression
-
-### Phase 4 — Global logistics
-
-Add:
-
-- containerization
-- specialized ports
-- advanced maritime logistics
-- aviation niches
-
-### Phase 5 — Convergence
-
-Add:
-
-- Electronics
-- Technology Systems
-- automation
-- autonomous transport
-- offshore wind
-
-### Phase 6 — Optional future modules
-
-Evaluate:
-
-- energy
-- hydrogen
-- recycling
-- finance
-- advanced technology
-- space
-
-Each phase should be playable and testable before the next layer is added.
+Modules should add meaningful routing or economic choices, not merely rename existing cargoes.
 
 ---
 
-# 37. Validation Tests
+# 13. Canonical Decisions from Validation
 
-Before considering the reference economy stable, test:
-
-## Cargo test
-
-- Does every cargo have a clear economic role?
-- Is any cargo redundant?
-- Are too many cargos required by one industry?
-
-## Industry test
-
-- Does every industry have a reason to exist?
-- Does it create meaningful transport decisions?
-- Does it fit an industry succession family?
-
-## Personnel test
-
-- Is Personnel genuinely different from Passengers?
-- Does it create geographic labor logistics?
-- Are return trips useful without being mandatory?
-
-## Era test
-
-- Do new industries appear naturally?
-- Do old industries persist appropriately?
-- Are date gates understandable?
-
-## Vehicle test
-
-- Does each major vehicle type have a niche?
-- Is the newest vehicle always the best?
-- Are older vehicles still useful in some circumstances?
-
-## Network test
-
-- Are there productive round trips?
-- Are there regional and long-distance opportunities?
-- Is the economy moderately interconnected?
-- Can a player understand why a route is profitable?
+| Finding | Canonical decision |
+|---|---|
+| Clay orphan | Keep Clay core; consume it through Construction Materials |
+| Copper processing ambiguity | Add Copper Works; Copper is the stable product |
+| Refinery/Chemical overlap | Refinery produces Petroleum Products; Chemical Works produces Chemicals |
+| “and/or” recipes | Replace with explicit recipe semantics |
+| Supply cycles | Must be validated as a directed acyclic dependency graph |
+| Personnel implementation | Economic rule is canonical; OpenTTD/NewGRF representation remains an adapter concern |
 
 ---
 
-# 38. Anti-Patterns
+# 14. Implementation Gate
 
-The reference economy should reject:
+Do not begin full NewGRF implementation until:
 
-### Cargo soup
+1. the cargo/industry dependency matrix exists;
+2. every core cargo has a valid source and consumer;
+3. all recipes use explicit relationship types;
+4. supply-production cycles are ruled out;
+5. dependency depth passes the complexity limit;
+6. Personnel representation has a technical adapter design;
+7. era gates and succession rules are testable;
+8. the prototype slice passes the economic validation suite.
 
-Too many cargos with weak distinctions.
-
-### Dependency soup
-
-Every industry requiring everything.
-
-### Chronological replacement
-
-New technology automatically destroying old technology.
-
-### Profession explosion
-
-Separate cargo for every occupation.
-
-### Vehicle ladder
-
-Newer vehicle = universally better vehicle.
-
-### Technology bonus spam
-
-Every advancement represented as a generic production multiplier.
-
-### Mandatory futurism
-
-Speculative systems becoming required for the core economy.
-
-### Geographic teleportation
-
-Resources, workers, or products appearing at economically impossible locations without transport.
-
-### Pointless round trips
-
-Return cargo added solely to make a vehicle load both ways without an economic reason.
+The economy is ready for implementation only when these tests pass—not merely because the prose looks coherent.
 
 ---
 
-# 39. Reference Economy Design Checklist
-
-For each new industry or cargo:
-
-- What economic role does it serve?
-- Which module owns it?
-- Which era introduces it?
-- What predecessor/successor does it have?
-- Which stable cargo identities does it use?
-- What are its hard production inputs?
-- Which operational supplies improve it?
-- How much Personnel does it need?
-- How does automation change that requirement?
-- Where can it geographically exist?
-- What transportation modes naturally serve it?
-- Can it participate in a productive round trip?
-- Does it create a meaningful network decision?
-- Does it increase depth without creating cargo soup?
-- Can it coexist with older industries?
-- Can the player understand it without reading the specification?
-
----
-
-# 40. Guiding Model
-
-The reference economy can be summarized as:
-
-```text
-RESOURCES
-   ↓
-PROCESSING
-   ↓
-PRODUCTS
-   ↓
-MARKETS
-
-        ↕
-
-OPERATIONAL INPUTS
-        ↕
-INDUSTRIAL CAPACITY
-        ↕
-PERSONNEL
-        ↕
-TRANSPORTATION
-        ↕
-GEOGRAPHY
-        ↕
-TIME / TECHNOLOGY
-```
-
-The economy evolves because these relationships change through time.
-
-The player succeeds by building transportation networks that respond to those changes.
+# 15. Guiding Principle
 
 > **The economy comes first. Vehicles serve the economy.**
 >
