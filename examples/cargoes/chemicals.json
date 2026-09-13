@@ -1,0 +1,12 @@
+{
+  "$schema": "https://github.com/jj-ervin/open-ttd/schema/cargo.schema.json",
+  "id": "chemicals",
+  "name": "Chemicals",
+  "classes": [
+    "product",
+    "operational_supply"
+  ],
+  "introduced": 1850,
+  "module": "chemicals",
+  "description": "Aggregated industrial and process chemicals used both as manufactured output and operational supply."
+}
