@@ -1,0 +1,6 @@
+[
+  {"id":"coke","name":"Coke","classes":["material"],"introduced":1750},
+  {"id":"steel","name":"Steel","classes":["material","product"],"introduced":1750},
+  {"id":"copper","name":"Copper","classes":["material","product"],"introduced":1850},
+  {"id":"glass","name":"Glass","classes":["material","product"],"introduced":1800}
+]
