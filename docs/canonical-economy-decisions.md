@@ -31,6 +31,10 @@ This is the normative baseline for the Economy Toolkit and Reference Economy. Ch
 
 **Operational supplies:** Tools & Hardware, Industrial Equipment, Construction Materials, Agricultural Supplies, Fuel, Chemicals, Technology Systems.
 
+**Optional financial flows:** Gold, Bullion, Coins/Cash, Securities/Financial Documents.
+
+Financial cargoes are optional physical flows representing high-value material or financial instruments. They do not replace the game's systemic money/economy and should be enabled only where they create meaningful logistics or security gameplay.
+
 ## Copper
 
 ```text
