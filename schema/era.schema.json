@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/jj-ervin/open-ttd/schema/era.schema.json",
+  "title": "OpenTTD Economy Era",
+  "type": "object",
+  "required": ["id", "name", "start", "end"],
+  "additionalProperties": false,
+  "properties": {
+    "id": {"type": "string", "pattern": "^[a-z][a-z0-9_]*$"},
+    "name": {"type": "string"},
+    "start": {"type": "integer"},
+    "end": {"type": "integer"},
+    "description": {"type": "string"},
+    "modules": {"type": "array", "items": {"type": "string"}}
+  }
+}

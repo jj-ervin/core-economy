@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/jj-ervin/open-ttd/schema/recipe.schema.json",
+  "title": "OpenTTD Economy Recipe",
+  "type": "object",
+  "required": ["id", "output", "inputs"],
+  "additionalProperties": false,
+  "properties": {
+    "id": {"type": "string", "pattern": "^[a-z][a-z0-9_]*$"},
+    "output": {"type": "string"},
+    "output_amount": {"type": "number", "exclusiveMinimum": 0},
+    "inputs": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/input"}},
+    "notes": {"type": "string"}
+  },
+  "$defs": {
+    "input": {
+      "type": "object",
+      "required": ["cargo", "amount", "relationship"],
+      "additionalProperties": false,
+      "properties": {
+        "cargo": {"type": "string"},
+        "amount": {"type": "number", "exclusiveMinimum": 0},
+        "relationship": {"enum": ["required", "proportional", "preferred", "alternative", "optional", "supply"]},
+        "group": {"type": "string"}
+      }
+    }
+  }
+}

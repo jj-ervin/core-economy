@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/jj-ervin/open-ttd/schema/economy.schema.json",
+  "title": "OpenTTD Economy Definition",
+  "type": "object",
+  "required": ["id", "name", "version", "eras", "cargoes", "industries", "recipes", "modules"],
+  "additionalProperties": false,
+  "properties": {
+    "id": {"type": "string", "pattern": "^[a-z][a-z0-9_]*$"},
+    "name": {"type": "string"},
+    "version": {"type": "string"},
+    "description": {"type": "string"},
+    "eras": {"type": "array", "items": {"type": "object", "required": ["id", "start", "end"], "additionalProperties": false, "properties": {"id": {"type": "string"}, "start": {"type": "integer"}, "end": {"type": "integer"}}}},
+    "cargoes": {"type": "array", "items": {"type": "string"}},
+    "industries": {"type": "array", "items": {"type": "string"}},
+    "recipes": {"type": "array", "items": {"type": "string"}},
+    "modules": {"type": "array", "items": {"type": "string"}},
+    "succession": {"type": "array", "items": {"type": "object", "required": ["predecessor", "successor", "transition"], "additionalProperties": false, "properties": {"predecessor": {"type": "string"}, "successor": {"type": "string"}, "transition": {"type": "integer"}}}},
+    "transport_roles": {"type": "array", "items": {"type": "string"}},
+    "endpoints": {"type": "array", "items": {"type": "string"}}
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/jj-ervin/open-ttd/schema/module.schema.json",
+  "title": "OpenTTD Economy Module",
+  "type": "object",
+  "required": ["id", "name", "enabled"],
+  "additionalProperties": false,
+  "properties": {
+    "id": {"type": "string", "pattern": "^[a-z][a-z0-9_]*$"},
+    "name": {"type": "string"},
+    "enabled": {"type": "boolean"},
+    "depends_on": {"type": "array", "items": {"type": "string"}},
+    "cargoes": {"type": "array", "items": {"type": "string"}},
+    "industries": {"type": "array", "items": {"type": "string"}},
+    "description": {"type": "string"}
+  }
+}
