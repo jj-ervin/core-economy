@@ -3,16 +3,52 @@
   "$id": "https://github.com/jj-ervin/open-ttd/schema/cargo.schema.json",
   "title": "OpenTTD Economy Cargo",
   "type": "object",
-  "required": ["id", "name", "class"],
+  "required": ["id", "name", "classes"],
   "additionalProperties": false,
   "properties": {
-    "id": {"type": "string", "pattern": "^[a-z][a-z0-9_]*$"},
-    "name": {"type": "string", "minLength": 1},
-    "class": {"enum": ["primary", "product", "operational_supply", "human_flow", "financial", "optional"]},
-    "introduced": {"type": "integer", "minimum": 0},
-    "tags": {"type": "array", "items": {"type": "string"}},
-    "endpoint": {"type": "boolean", "default": false},
-    "module": {"type": "string"},
-    "description": {"type": "string"}
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_]*$"
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1
+    },
+    "classes": {
+      "type": "array",
+      "description": "One or more economic roles held by this cargo identity.",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "enum": [
+          "primary",
+          "product",
+          "operational_supply",
+          "human_flow",
+          "financial",
+          "optional"
+        ]
+      }
+    },
+    "introduced": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "endpoint": {
+      "type": "boolean",
+      "default": false
+    },
+    "module": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    }
   }
 }
