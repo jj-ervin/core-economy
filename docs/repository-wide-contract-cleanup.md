@@ -16,7 +16,7 @@ classes:
   - operational_supply
 ```
 
-Do not introduce new singular `class` or `role` fields in cargo definitions. Legacy examples using `class:` are historical migration examples only and must not be copied into new definitions.
+Do not introduce new singular cargo-class or role fields in cargo definitions. Deprecated migration syntax must not be copied into new definitions.
 
 ## 2. Approved cargo classes
 
@@ -55,7 +55,7 @@ Copper Ore → Copper Works → Copper
 Petroleum Products → Fuel Depot / Terminal → Fuel distribution
 ```
 
-The repository must not define a canonical `processed copper` cargo.
+The repository must not define a canonical intermediate-copper cargo.
 
 ## 5. Recipe semantics
 
@@ -98,7 +98,7 @@ A complete economy definition contains the actual objects. The validator operate
 
 ## 8. Historical wording
 
-Historical decision records may mention removed concepts such as `processed copper` or singular `class` syntax when explaining the migration. Such references must be clearly marked as historical, deprecated, or rejected examples. They must not appear as active canonical definitions.
+Historical decision records may mention removed concepts or deprecated cargo-field syntax when explaining the migration. Such references must be clearly marked as historical, deprecated, or rejected examples. They must not appear as active canonical definitions.
 
 ## 9. Cleanup acceptance criteria
 
