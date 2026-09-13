@@ -48,6 +48,9 @@ The economy uses stable cargo identities and historical industry succession. Tec
 - Construction Materials
 - Agricultural Supplies
 - Technology Systems
+- Fuel
+
+`Chemicals` is a stable manufactured product that may also serve as an operational supply. `Fuel` is a stable operational-energy cargo distributed from Petroleum Products through fuel depots or terminals.
 
 ## Human Flows
 
@@ -79,7 +82,7 @@ Livestock ─┼→ Food Processing → Food → Towns
 Fish ──────┘
 ```
 
-Food Processing uses an **alternative-feedstock** model: a configured plant may accept one or more of Grain, Livestock, and Fish. “And/or” is not a recipe type.
+Food Processing uses an **alternative-feedstock** model: a configured plant may accept one or more of Grain, Livestock, and Fish. “And/or” is not a recipe type. The canonical group is `food_feedstock` with explicit `alternative` semantics.
 
 ## Forestry / Construction
 
@@ -98,7 +101,7 @@ Clay is a **core** resource. Construction Materials uses Clay as a defined compo
 Iron Ore + Coal → Steel Mill → Steel
 ```
 
-Later steel technologies may use an approved alternative energy pathway through an optional Energy module.
+The **core reference economy always uses Iron Ore + Coal** for Steel. An Energy-module implementation may define an alternative energy pathway, but that pathway is optional, explicitly module-gated, and never required by the core economy.
 
 ## Copper
 
@@ -109,6 +112,8 @@ Copper Ore → Copper Works → Copper
 ```
 
 Copper is a stable **PRODUCT**. There is no core “intermediate-copper” cargo.
+
+Copper Works has a historical successor, **Automated Copper Works**, without changing the Copper cargo identity.
 
 ## Petroleum / Chemicals
 
@@ -124,9 +129,11 @@ The gas branch is allowed only through an explicitly defined gas-feedstock recip
 - Refinery = petroleum processing.
 - Chemical Works = chemical manufacturing from defined feedstocks.
 
-Fuel may later be split from Petroleum Products by an optional Energy/Transport module.
+Fuel is distributed from Petroleum Products through a Fuel Depot / Terminal. Fuel is an operational supply, not a substitute for Petroleum Products and not a second refinery output.
 
 ## Machinery
+
+### Base Machinery
 
 ```text
 Steel + Copper
@@ -136,9 +143,23 @@ Machinery Works
 Machinery
 ```
 
-Chemicals may be an optional/preferred input in the base Machinery recipe and can become required in advanced variants.
+Base Machinery requires **Steel + Copper**. Chemicals are an optional/preferred input in the base recipe; they are not a universal hard prerequisite.
+
+### Advanced Machinery
+
+```text
+Steel + Copper + Chemicals
+            ↓
+Advanced Machinery Works
+            ↓
+Machinery
+```
+
+Advanced Machinery makes Chemicals a required production input while retaining the same Machinery cargo identity.
 
 ## Manufactured Goods
+
+### Base Factory
 
 ```text
 Steel + Lumber
@@ -148,19 +169,43 @@ Factory
 Manufactured Goods
 ```
 
-Machinery, Chemicals, and Electronics are preferred or required in later factory states rather than being universally mandatory from the beginning.
+### Advanced Factory
+
+```text
+Steel + Lumber + Machinery
+            ↓
+Advanced Factory
+            ↓
+Manufactured Goods
+```
+
+The base Factory requires Steel + Lumber. Machinery is introduced as a required production input only in the advanced factory state. Chemicals and Electronics may be preferred/optional production modifiers where explicitly defined; they are not universal hard prerequisites.
 
 ## Electronics
+
+### Base Electronics
 
 ```text
 Copper + Chemicals
        ↓
-Electronics Factory
+Electronics Works
        ↓
 Electronics
 ```
 
-Machinery can be a preferred input. Advanced electronics increasingly depend on Technology Systems operational supply.
+Machinery can be a preferred input. Technology Systems are an operational supply, not a production input.
+
+### Advanced Electronics
+
+```text
+Copper + Chemicals + Machinery
+            ↓
+Advanced Electronics Works
+            ↓
+Electronics
+```
+
+Advanced Electronics requires Machinery in addition to Copper and Chemicals. Advanced Electronics increasingly depends on Technology Systems as an operational supply.
 
 ## Advanced Goods
 
@@ -180,6 +225,17 @@ Advanced Goods remain intentionally broad.
 
 Operational supplies are productivity modifiers rather than universal hard prerequisites.
 
+Canonical operational supplies are:
+
+- Tools & Hardware
+- Industrial Equipment
+- Construction Materials
+- Agricultural Supplies
+- Technology Systems
+- Fuel
+
+`Chemicals` may also be consumed as an operational supply by explicitly defined industries, but remains canonically classified as a manufactured Product as well.
+
 Typical progression:
 
 ```text
@@ -188,6 +244,8 @@ Industrial   → Tools + Industrial Equipment
 Modern       → Industrial Equipment + Technology Systems
 Automated    → Technology Systems + reduced Personnel
 ```
+
+Fuel supports energy and movement-intensive operations where explicitly declared. It does not automatically become a hard input.
 
 Supply service levels remain:
 
@@ -555,6 +613,8 @@ The following may extend the reference economy without becoming mandatory:
 - Research / advanced technology
 - Space
 
+The Energy module may define alternate steel energy pathways, electricity, hydrogen, or related systems. These extensions must remain explicitly module-gated and must not replace the core Iron Ore + Coal steel recipe unless the module is enabled.
+
 Modules should add meaningful routing or economic choices, not merely rename existing cargoes.
 
 ---
@@ -564,11 +624,16 @@ Modules should add meaningful routing or economic choices, not merely rename exi
 | Finding | Canonical decision |
 |---|---|
 | Clay orphan | Keep Clay core; consume it through Construction Materials |
-| Copper processing ambiguity | Add Copper Works; Copper is the stable product |
+| Copper processing ambiguity | Add Copper Works; Copper is the stable product; add an Automated Copper Works successor |
 | Refinery/Chemical overlap | Refinery produces Petroleum Products; Chemical Works produces Chemicals |
 | “and/or” recipes | Replace with explicit recipe semantics |
 | Supply cycles | Must be validated as a directed acyclic dependency graph |
 | Personnel implementation | Economic rule is canonical; OpenTTD/NewGRF representation remains an adapter concern |
+| Advanced steel energy pathway | Core Steel remains Iron Ore + Coal; alternate energy route is optional Energy-module behavior |
+| Machinery base recipe | Base Machinery = Steel + Copper; Chemicals optional/preferred; Advanced Machinery requires Chemicals |
+| Manufactured Goods succession | Base Factory = Steel + Lumber; Advanced Factory adds Machinery as a required input |
+| Electronics succession | Base Electronics = Copper + Chemicals; Advanced Electronics adds Machinery as a required input |
+| Agricultural Supplies | Agricultural Supply Works = Chemicals + Machinery |
 
 ---
 
