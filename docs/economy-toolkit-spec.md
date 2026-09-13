@@ -175,7 +175,8 @@ Conceptual example:
 cargo:
   id: copper
   name: Copper
-  class: product
+  classes:
+    - product
   introduced: 1850
   tags:
     - metal
