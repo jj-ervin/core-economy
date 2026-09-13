@@ -37,7 +37,7 @@ Oil → Refinery → Petroleum Products
 Defined petroleum/gas feedstocks → Chemical Works → Chemicals
 ```
 
-There is no canonical `processed copper` cargo. Copper is the stable product identity.
+There is no canonical `intermediate-copper` cargo. Copper is the stable product identity.
 
 Refinery and Chemical Works are separate economic activities:
 
@@ -105,7 +105,7 @@ When older documents conflict with this note, the current contract takes precede
 - `OPERATIONAL_INPUT` as a cargo class name;
 - Refinery producing Chemicals;
 - Fuel described as optional or absent from the operational-supply vocabulary;
-- processed copper as a cargo;
+- intermediate-copper as a cargo;
 - ambiguous `and/or` recipes;
 - claims that Chemicals are only a product or only a supply.
 
