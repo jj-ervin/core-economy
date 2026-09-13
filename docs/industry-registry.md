@@ -157,7 +157,7 @@ Offshore sites create a deliberate round-trip logistics pattern: Personnel, Indu
 | `MFG_ELECTRONICS_ADV` | Advanced Electronics Works | manufacturing | Technology | 2000–2150 | Copper + Chemicals + Machinery | Technology Systems; Industrial Equipment; Fuel | Low / returnable | Electronics | `MFG_ELECTRONICS` | — | Advanced technology regions | Large |
 | `MFG_ADVANCED` | Advanced Goods Works | manufacturing | Advanced Technology | 2000–2150 | Electronics + Chemicals + Machinery | Technology Systems; Industrial Equipment; Fuel | Low–Medium / returnable | Advanced Goods | — | — | Advanced technology regions | Large |
 
-No `processed copper` cargo exists. The canonical copper chain is `Copper Ore → Copper Works → Copper`.
+No separate `intermediate-copper` cargo exists. The canonical copper chain is `Copper Ore → Copper Works → Copper`.
 
 ## 8. Supply-production registry
 
@@ -213,7 +213,7 @@ They should not create duplicate cargo identities merely because technology chan
 
 1. Do not use `and/or` in a production definition.
 2. Do not describe Refinery as producing `Chemicals`.
-3. Do not use `processed copper`; use `Copper`.
+3. Do not create a separate `intermediate-copper` cargo; use `Copper`.
 4. Do not treat Fuel Depot / Terminal as a manufacturing industry.
 5. Do not make every operational supply a universal hard input.
 6. Do not make `optional` the only semantic cargo class for an economically active cargo.
