@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/jj-ervin/open-ttd/validation/cargo-role-rules.json",
+  "title": "Cargo Role Validation Rules",
+  "description": "Semantic validation rules for cargo identities that may hold more than one economic role.",
+  "rules": [
+    {
+      "id": "cargo-classes-required",
+      "severity": "error",
+      "condition": "cargo.classes exists and contains at least one role"
+    },
+    {
+      "id": "cargo-classes-unique",
+      "severity": "error",
+      "condition": "cargo.classes contains no duplicate values"
+    },
+    {
+      "id": "cargo-classes-approved",
+      "severity": "error",
+      "condition": "every value in cargo.classes is one of primary, product, operational_supply, human_flow, financial, optional"
+    },
+    {
+      "id": "optional-is-not-semantic-only",
+      "severity": "error",
+      "condition": "optional must not be the only class when the cargo participates in a production, consumption, supply, human-flow, or financial relationship"
+    },
+    {
+      "id": "role-relationship-consistency",
+      "severity": "error",
+      "condition": "relationships must be compatible with at least one declared cargo class"
+    },
+    {
+      "id": "multi-role-is-identity-preserving",
+      "severity": "warning",
+      "condition": "multiple classes describe one stable cargo identity; they must not cause duplicate cargo IDs or duplicate transport slots"
+    }
+  ],
+  "roleSemantics": {
+    "primary": "Normally produced by extraction or harvesting activity.",
+    "product": "Produced by processing, refinement, or manufacturing activity.",
+    "operational_supply": "Delivered as an operational service input and normally affects productivity, capacity, reliability, or efficiency rather than acting as a universal hard prerequisite.",
+    "human_flow": "Represents passengers, personnel, mail, or another explicitly defined human/economic flow.",
+    "financial": "Represents an optional physical financial flow; it does not replace systemic money.",
+    "optional": "Availability or module designation; not a substitute for a semantic economic role."
+  }
+}
