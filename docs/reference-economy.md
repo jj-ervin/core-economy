@@ -108,7 +108,7 @@ Copper Ore → Copper Works → Copper
                               └→ Electronics
 ```
 
-Copper is a stable **PRODUCT**. There is no core “processed copper” cargo.
+Copper is a stable **PRODUCT**. There is no core “intermediate-copper” cargo.
 
 ## Petroleum / Chemicals
 
@@ -493,7 +493,7 @@ Rules:
 - Advanced industries may reach five only when the added logistics has clear gameplay value.
 - Operational supplies are not counted as hard inputs unless a module explicitly changes that rule.
 - Every core cargo must have a defined source and consumer, except explicit endpoints/human flows/optional cargoes.
-- No undefined cargo names such as “processed copper” may appear in canonical recipes.
+- No undefined cargo names such as “intermediate-copper” may appear in canonical recipes.
 - Recipe relationships must use explicit semantics: required, proportional, preferred, alternative, optional.
 - Supply-production dependency graphs must be acyclic.
 
