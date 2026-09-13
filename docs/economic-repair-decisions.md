@@ -48,7 +48,7 @@ A future Construction/Ceramics module may add dedicated clay-processing industri
 
 **Decision: RESOLVED — Copper Works becomes part of the core Heavy Industry chain.**
 
-The previous concept of an undefined `processed copper` cargo is removed. Copper now has a concrete two-stage identity:
+The previous concept of an undefined `intermediate-copper` cargo is removed. Copper now has a concrete two-stage identity:
 
 ```text
 Copper Ore
@@ -88,7 +88,7 @@ Existing Copper Works continue operating after the advanced successor becomes av
 
 ## Manufacturing correction
 
-The core manufacturing chains should consume **Copper**, not `Copper Ore/processed copper`.
+The core manufacturing chains should consume **Copper**, not `Copper Ore/intermediate-copper`.
 
 ### Machinery
 
@@ -223,7 +223,7 @@ These decisions close the three material findings as follows:
 | Finding | Previous problem | Locked resolution | Validation status |
 |---|---|---|---|
 | Clay orphan | No definite core consumer | Clay feeds Construction Materials | **PASS** |
-| Copper ambiguity | Undefined processed-copper stage | Add Copper Works and stable Copper product | **PASS** |
+| Copper ambiguity | Undefined intermediate-copper stage | Add Copper Works and stable Copper product | **PASS** |
 | Refinery/Chemical overlap | Duplicate Oil/Gas → Chemicals role | Refinery → Petroleum Products → Chemical Works → Chemicals | **PASS** |
 
 The next validation pass should test the resulting dependency graph for cycles, excessive depth, hard-input overload, and unintended supply loops.
@@ -236,7 +236,7 @@ For implementation purposes, these locked decisions supersede earlier provisiona
 
 - describe Clay as only an optional ceramics/construction resource;
 - route Copper Ore directly into manufacturing as a substitute for a processor;
-- describe `processed copper` without a defined producer;
+- describe `intermediate-copper` without a defined producer;
 - define Refinery as directly producing Chemicals;
 - define Chemical Works as independently converting raw Oil/Gas into the same Chemicals output.
 
