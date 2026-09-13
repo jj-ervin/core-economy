@@ -1,6 +1,6 @@
 # OpenTTD Economic Framework — Industry Model
 
-**Status:** Draft v0.1
+**Status:** Draft v0.2 — contract-aligned
 
 ## Purpose
 
@@ -44,7 +44,7 @@ MECHANIZED_COAL_MINE
 AUTOMATED_EXTRACTION_SITE
 ```
 
-The framework should distinguish between:
+The framework distinguishes between:
 
 - **economic identity** — what the site does;
 - **technology state** — how it does it;
@@ -96,29 +96,39 @@ Examples:
 
 ### Processing
 
-Transforms one or more inputs into intermediate or finished products.
+Transforms one or more inputs into products.
 
-Examples:
+Canonical examples:
 
 ```text
-Grain → Flour
-Flour + Grain → Food
-Iron Ore + Coal → Steel
-Timber → Lumber
-Oil → Refined Fuels / Chemicals
+Copper Ore → Copper Works → Copper
+Iron Ore + Coal → Steel Mill → Steel
+Timber → Sawmill → Lumber
+Oil → Refinery → Petroleum Products
+Petroleum Products / explicit Gas-feedstock option → Chemical Works → Chemicals
 ```
+
+Food Processing uses an explicit `food_feedstock` alternative group containing Grain, Livestock, and Fish. It does not use an ambiguous `and/or` recipe.
 
 ### Manufacturing
 
-Combines processed materials, products, and operational inputs to create manufactured goods or equipment.
+Combines processed materials and products to create manufactured goods or equipment.
 
-Examples:
+Canonical recipe states include:
 
 ```text
-Steel + Lumber + Industrial Equipment
-              ↓
-          Machinery
+Base Machinery:
+Steel + Copper
+     ↓
+Machinery
+
+Advanced Machinery:
+Steel + Copper + Chemicals
+     ↓
+Machinery
 ```
+
+The base Factory uses Steel + Lumber; Advanced Factory adds Machinery. Base Electronics uses Copper + Chemicals; Advanced Electronics adds Machinery.
 
 ### Infrastructure / Supply Production
 
@@ -127,11 +137,18 @@ Produces operational inputs used by other industries.
 Examples:
 
 ```text
-Iron + Timber + Coal
+Chemicals + Machinery
         ↓
-Engineering Works
+Agricultural Supply Works
         ↓
-Tools & Hardware
+Agricultural Supplies
+```
+
+```text
+Steel + Machinery
+        ↓
+Industrial Equipment Works
+        ↓
 Industrial Equipment
 ```
 
@@ -157,22 +174,14 @@ An industry should explicitly describe the cargo relationships that matter to it
 A simple industry may be:
 
 ```text
-IRON_ORE
-   ↓
+IRON_ORE + COAL
+       ↓
 STEELWORKS
-   ↓
+       ↓
 STEEL
 ```
 
-A deeper industry can combine several inputs:
-
-```text
-IRON_ORE + COAL + INDUSTRIAL_EQUIPMENT + PERSONNEL
-                         ↓
-                    STEELWORKS
-                         ↓
-                       STEEL
-```
+A deeper industry can combine several inputs, but operational supplies and Personnel should not automatically be represented as hard production inputs.
 
 The framework does not require every listed input to be a hard prerequisite.
 
@@ -203,11 +212,12 @@ Steelworks
   Tools & Hardware
   Industrial Equipment
   Technology Systems
+  Fuel
 ```
 
 These normally modify productivity rather than functioning as an on/off switch.
 
-This distinction prevents the economy from becoming a giant dependency tree where every missing box causes an industry to shut down.
+`Chemicals` is multi-role: it is a manufactured product and may also be declared as an operational supply by an industry.
 
 ## Supply Service
 
@@ -435,16 +445,13 @@ FARM
 1700–1850
 Traditional / labor-intensive
 
-1850–1950
+1800–1950
 Mechanized
 
-1950–2000
-Industrialized
-
-2000–2050
+1980–2045
 Precision agriculture
 
-2050+
+2035–2150
 Automated / autonomous agriculture
 ```
 
@@ -589,7 +596,7 @@ Mechanized Farm
   ↑ improved with Agricultural Supplies
        ↓
 Precision / Automated Farm
-  Grain + specialized outputs
+  Grain + Livestock
   ↑ improved with Technology Systems
 ```
 
@@ -611,14 +618,14 @@ The sawmill can evolve from a small local operation into a large industrial faci
 ```text
 Iron Ore + Coal
         ↓
-Foundry / Early Steelworks
+Steel Mill
         ↓
 Steel
         ↓
 Industrial Manufacturing
 ```
 
-Later steelworks can consume more Industrial Equipment and Technology Systems while retaining the same core economic role.
+Later steelworks can consume more Industrial Equipment and Technology Systems while retaining the same core Iron Ore + Coal production recipe.
 
 ## Industry Design Checklist
 
