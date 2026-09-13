@@ -41,7 +41,7 @@ Financial cargoes are optional physical flows representing high-value material o
 Copper Ore → Copper Works → Copper → Machinery / Electronics
 ```
 
-There is no separate `processed copper` cargo.
+There is no separate `intermediate-copper` cargo.
 
 ## Petroleum and chemicals
 
