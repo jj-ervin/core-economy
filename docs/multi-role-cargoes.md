@@ -2,7 +2,7 @@
 
 ## Rule
 
-A cargo identity may hold more than one economic role. Use the `classes` array rather than a singular `class` field.
+A cargo identity may hold more than one economic role. Use the `classes` array rather than a singular cargo-class field.
 
 ```json
 {
@@ -25,13 +25,7 @@ The cargo identity remains singular. Multiple classes describe different economi
 
 ## Migration
 
-Replace:
-
-```yaml
-class: product
-```
-
-with:
+Replace the former singular cargo-class field with:
 
 ```yaml
 classes:
