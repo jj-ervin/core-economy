@@ -1,35 +1,66 @@
 # OpenTTD Economic Framework — Cargo Ontology
 
-**Status:** Draft v0.1
+**Status:** Draft v0.2
 
 ## Purpose
 
-This document defines what a cargo is within the OpenTTD Economic Framework, how cargoes are classified, and which properties should remain consistent across industries, eras, and optional modules.
+This document defines what a cargo is within the OpenTTD Economic Framework, how cargoes are classified, and which properties remain stable across industries, eras, and optional modules.
 
-The goal is to give economy designers a common vocabulary without forcing every economy to use the same cargo roster.
+The framework provides a common vocabulary without requiring every economy to use the same cargo roster.
 
 ## Core Principle
 
-> **A cargo has a semantic role before it has a name.**
+> **Cargo identity and economic role are related, but they are not always identical.**
 
-A cargo is not merely a label attached to a NewGRF cargo slot. It represents an economic thing that can participate in production, consumption, labor, communication, or financial logistics.
+A cargo is a stable transported economic identity. Its economic role or roles describe how it participates in the economy.
 
-The framework should distinguish:
+A cargo definition must distinguish:
 
-- **What something is economically** — its role.
-- **What it is physically** — its represented material, people, goods, or documents.
-- **Where it is useful** — its acceptance and production relationships.
-- **When it exists** — its era and technology availability.
+- what the cargo is economically;
+- what it represents physically;
+- where it is produced, consumed, accepted, or transported;
+- when it is available;
+- which module owns or extends it.
 
-## Semantic Roles
+## Cargo Classes
 
-The core ontology defines five roles.
+The machine-readable contract uses a `classes` array. A cargo may have more than one class when one stable cargo identity legitimately participates in multiple economic roles.
 
-### 1. PRIMARY_RESOURCE
+Approved classes are:
 
-Something extracted, harvested, caught, mined, pumped, or otherwise obtained from the environment.
+- `primary` — extracted, harvested, caught, mined, pumped, or otherwise obtained from the environment;
+- `product` — created through processing, refinement, or manufacturing;
+- `operational_supply` — delivered to improve productivity, capacity, reliability, efficiency, maintenance, expansion, or modernization;
+- `human_flow` — passengers, personnel, mail, or another explicitly defined human/economic flow;
+- `financial` — an optional physical financial flow such as bullion or securities;
+- `optional` — an availability or module designation, never a substitute for a semantic economic role.
 
-Examples:
+Example:
+
+```json
+{
+  "id": "chemicals",
+  "name": "Chemicals",
+  "classes": ["product", "operational_supply"]
+}
+```
+
+This means that Chemicals is manufactured as a product and may also be delivered as an operational supply. It remains one cargo identity and must not create duplicate cargo slots merely because it has multiple classes.
+
+## Multi-Role Cargo Rules
+
+1. `classes` is required and must contain at least one value.
+2. Values in `classes` must be unique.
+3. Every value must be an approved class.
+4. Multiple classes describe one stable cargo identity.
+5. A multi-role cargo must not receive duplicate IDs, duplicate transport slots, or duplicated production relationships solely because it has multiple classes.
+6. Each production, consumption, supply, human-flow, or financial relationship must be compatible with at least one declared class.
+7. `optional` may be combined with a semantic class, but it must not be the only class when the cargo participates in a defined economic relationship.
+8. A class does not automatically create a production recipe. Relationships must be explicitly defined by industries, recipes, endpoints, or modules.
+
+## Canonical Cargo Examples
+
+### Primary resources
 
 - Grain
 - Livestock
@@ -41,179 +72,94 @@ Examples:
 - Clay
 - Oil
 - Gas
-- Copper
+- Copper Ore
 
-A primary resource normally originates at an extraction or production site and becomes an input to another economic activity.
-
-### 2. PRODUCT
-
-Something created through processing, manufacturing, refinement, or other productive activity.
-
-Examples:
+### Products
 
 - Food
 - Lumber
 - Steel
+- Copper
+- Petroleum Products
 - Machinery
 - Chemicals
 - Manufactured Goods
 - Electronics
 - Advanced Goods
 
-A product may itself become an input to another industry.
-
-### 3. OPERATIONAL_INPUT
-
-Something supplied to an industry to operate, maintain, expand, improve, or modernize productive capacity.
-
-Initial framework classes:
+### Operational supplies
 
 - Tools & Hardware
 - Industrial Equipment
 - Construction Materials
 - Agricultural Supplies
 - Technology Systems
+- Fuel
+- Chemicals
 
-Operational inputs normally modify productivity rather than functioning as binary prerequisites.
-
-### 4. HUMAN_FLOW
-
-People transported as part of an economic or social movement.
-
-Core human-flow cargoes:
-
-- **Passengers** — people traveling because they want or need to reach a destination.
-- **Personnel** — people transported because a productive site requires their labor.
-- **Mail** — physical communication and parcels.
-
-Passengers and Personnel are intentionally distinct. Personnel has an economic relationship with the destination: the destination needs workers.
-
-### 5. FINANCIAL_FLOW
-
-Physical financial objects transported because their physical movement has economic value or gameplay significance.
-
-Possible examples:
-
-- Gold
-- Bullion
-- Coin
-- Cash
-- Securities
-- Financial Documents
-
-Financial flows are optional. Systemic company money is not automatically a cargo.
+Chemicals intentionally appears in both the product and operational-supply lists because its identity supports both roles.
 
 ## Cargo Identity
 
-Every framework cargo should have a stable identifier separate from its display name.
+Every cargo must have a stable machine-readable identifier separate from its display name.
 
-Conceptual example:
-
-```text
-id: INDUSTRIAL_EQUIPMENT
-name: Industrial Equipment
-role: OPERATIONAL_INPUT
+```json
+{
+  "id": "industrial_equipment",
+  "name": "Industrial Equipment",
+  "classes": ["operational_supply"]
+}
 ```
 
-The identifier should remain stable even if the description, artwork, technology represented, or production relationships evolve.
+The identifier should remain stable even if artwork, technology representation, or production relationships evolve.
 
-This allows a cargo to survive historical transitions without requiring a new cargo merely because the underlying technology changed.
+A change in technology does not automatically justify a new cargo. For example, hand tools, machine tools, precision tools, and automated tools may remain represented by `tools_and_hardware` when they create the same economic and transportation decision.
 
 ## Cargo Properties
 
-A framework cargo may define the following properties.
+A cargo may define:
 
 | Property | Purpose |
 |---|---|
 | `id` | Stable machine-readable identity |
 | `name` | Player-facing display name |
-| `role` | Semantic economic role |
+| `classes` | One or more approved economic roles |
 | `description` | Human-readable meaning |
 | `mass_class` | Relative transportation weight |
 | `volume_class` | Relative transportation space |
 | `value_class` | Relative economic value |
-| `perishability` | How quickly the cargo loses usefulness |
+| `perishability` | How quickly usefulness declines |
 | `hazard_class` | Safety or handling requirements |
 | `storage_class` | Storage requirements and constraints |
-| `era_start` | Earliest intended availability |
+| `introduced` | Earliest intended availability |
 | `era_end` | Optional end of availability |
-| `technology_state` | Technology assumptions for the current era |
-| `returnable` | Whether the cargo can meaningfully return to its source or another origin |
+| `technology_state` | Historical technology representation |
+| `returnable` | Whether the cargo can meaningfully return |
 | `module` | Owning optional module or framework component |
 
-Not every property must be exposed directly to players. Some exist to support consistent economic design.
-
-## Stable Cargo, Evolving Technology
-
-The framework prefers stable cargo identities where the economic role remains substantially the same.
-
-For example:
-
-```text
-TOOLS_AND_HARDWARE
-
-1700 → hand tools, simple hardware, replacement parts
-1850 → machine tools and industrial maintenance equipment
-1950 → precision tools and specialized hardware
-2000 → advanced tools and maintenance components
-2050 → automated tools and advanced service hardware
-```
-
-Likewise:
-
-```text
-TECHNOLOGY_SYSTEMS
-
-Early era → electrical equipment and communications hardware
-Industrial era → electrical control and instrumentation
-20th century → electronics and computing systems
-21st century → digital control, automation, robotics, AI systems
-Future → advanced autonomous systems
-```
-
-The cargo identity remains stable while its historical representation changes.
-
-## Cargo Is Not an Industry
-
-A cargo represents something transported between economic locations.
-
-An industry represents an economic activity or site that produces, consumes, transforms, employs, or otherwise interacts with cargo.
-
-For example:
-
-```text
-IRON_ORE
-    ↓
-STEELWORKS
-    ↓
-STEEL
-```
-
-The cargo `IRON_ORE` is not the mine. The cargo `STEEL` is not the steelworks.
-
-This separation is fundamental to modularity.
+Not every property must be exposed directly to players. Some exist to support consistent design and validation.
 
 ## Production and Acceptance Relationships
 
-Cargoes participate in relationships rather than hard-coded universal rules.
-
-A cargo may be:
+Cargoes participate in explicit relationships rather than universal hard-coded rules. A cargo may be:
 
 - produced by one or more industries;
 - consumed by one or more industries;
 - transformed into another cargo;
-- required as an operational input;
-- accepted by cities or other economic destinations;
+- delivered as an operational supply;
+- accepted by towns or other destinations;
 - associated with personnel demand;
-- associated with a financial or logistics relationship.
+- associated with financial or logistics relationships;
+- stored, traded, or transported by specialized facilities.
 
-Conceptual relationship vocabulary:
+The framework recognizes relationship concepts such as:
 
 ```text
 PRODUCES
 CONSUMES
 TRANSFORMS
 REQUIRES
+SUPPLIES
 EMPLOYS
 ACCEPTS
 TRANSPORTS
@@ -221,55 +167,13 @@ STORES
 TRADES
 ```
 
-The same cargo can participate in different relationships in different modules or eras.
+The same cargo may participate in different relationships in different modules or eras, provided those relationships remain explicit and valid.
 
-## Personnel Semantics
+## Operational Supply Semantics
 
-Personnel is intentionally generic at the cargo level.
+Operational supplies normally modify service quality or productivity rather than acting as universal binary prerequisites.
 
-The destination provides context.
-
-For example:
-
-```text
-Personnel → Coal Mine
-= mining labor
-
-Personnel → Offshore Platform
-= offshore crew
-
-Personnel → Shipyard
-= shipbuilding labor
-
-Personnel → Research Facility
-= researchers / technical staff
-```
-
-The framework does not need separate cargoes for every profession.
-
-### Returnability
-
-Personnel may be marked as returnable.
-
-Conceptually:
-
-```text
-PERSONNEL_SOURCE
-      ↓
-  PERSONNEL
-      ↓
-  WORKSITE
-      ↓
-RETURNING_PERSONNEL
-```
-
-Whether the implementation uses one cargo identity or an explicit returned state is an implementation decision. The economic model must preserve the concept that labor can make a productive trip and subsequently leave the worksite.
-
-## Operational Input Semantics
-
-Operational inputs should remain broad enough to create useful logistics decisions without producing dozens of nearly identical cargoes.
-
-For example, the framework may use:
+The framework currently recognizes these broad supply identities:
 
 ```text
 TOOLS_AND_HARDWARE
@@ -277,75 +181,79 @@ INDUSTRIAL_EQUIPMENT
 CONSTRUCTION_MATERIALS
 AGRICULTURAL_SUPPLIES
 TECHNOLOGY_SYSTEMS
+FUEL
+CHEMICALS
 ```
 
-An industry can specify which supply classes improve its productivity.
+Their historical representation may evolve without requiring separate cargoes for every lubricant, solvent, coolant, fertilizer, seed, reagent, or maintenance component.
 
-Example:
+Examples:
 
 ```text
-Coal Mine
-  Tools & Hardware      → productivity support
-  Industrial Equipment  → productivity support
-
 Farm
-  Tools & Hardware       → productivity support
-  Agricultural Supplies  → productivity support
+  Tools & Hardware
+  Agricultural Supplies
+
+Mine
+  Tools & Hardware
+  Industrial Equipment
+  Fuel
 
 Factory
-  Tools & Hardware       → productivity support
-  Industrial Equipment   → productivity support
-  Technology Systems     → modernization / productivity support
+  Tools & Hardware
+  Industrial Equipment
+  Technology Systems
+  Chemicals
+
+Port
+  Fuel
+  Industrial Equipment
+  Construction Materials
 ```
 
-The framework should resist splitting these into highly specialized cargoes unless the distinction creates a meaningful transportation decision.
+An operational-supply class does not by itself mean that every industry consumes that cargo. Each industry must declare its own supply relationships and effects.
+
+## Human-Flow Semantics
+
+The core human-flow identities are:
+
+- **Passengers** — people traveling because they want or need to reach a destination;
+- **Personnel** — people transported because a productive site requires labor;
+- **Mail** — physical communication and parcels.
+
+Personnel is contextual. The destination determines whether the flow represents miners, offshore crew, shipyard workers, researchers, or another workforce. The framework should not create profession-specific cargoes merely for flavor.
+
+Personnel may be returnable. Whether the implementation uses one cargo identity or an explicit returned state is an adapter decision, but the economic model must preserve the possibility of productive round trips.
+
+## Financial-Flow Semantics
+
+Financial cargoes are optional physical flows whose movement creates meaningful gameplay, such as:
+
+- Gold
+- Bullion
+- Coins or Cash
+- Securities or Financial Documents
+
+Systemic company money is not automatically represented as cargo.
 
 ## Era Availability
 
-A cargo can have an earliest and optional latest intended era.
+Cargo availability should describe when a cargo becomes available for new economic activity. It should not automatically destroy existing flows when a successor industry or technology appears.
 
-Date gating should normally describe **when the cargo becomes available for new economic activity**, not automatically destroy or invalidate existing cargo flows.
+Stable cargo identities are preferred when the underlying economic role remains substantially the same. Historical change should usually be represented through industry succession, technology state, production modifiers, geography, or logistics requirements.
 
-Cargo availability should be coordinated with industry succession.
+## Modules and Namespacing
 
-Example:
+Optional modules may introduce cargoes using the same contract. Modules must document:
 
-```text
-Traditional agricultural supplies
-        ↓
-Industrial agricultural supplies
-        ↓
-Precision agricultural systems
-```
+1. cargoes they introduce;
+2. existing cargoes they consume or produce;
+3. cargoes they modify or extend;
+4. target eras;
+5. dependencies on other modules;
+6. whether their relationships are optional or core.
 
-If these can be represented economically by the same cargo role, the framework should prefer a stable cargo identity with changing technology representation.
-
-## Optional Modules
-
-The core ontology should remain small. Additional modules may define additional cargoes using the same role system.
-
-Possible modules include:
-
-- Agriculture
-- Forestry
-- Heavy Industry
-- Maritime
-- Offshore
-- Energy
-- Chemicals
-- Global Logistics
-- Recycling
-- Finance
-- Advanced Technology
-- Space
-
-A module owns its cargo definitions and documents its relationships with other modules.
-
-## Compatibility and Namespacing
-
-Independent modules should avoid ambiguous cargo identities.
-
-Conceptually:
+Conceptual namespacing may look like:
 
 ```text
 CORE:PERSONNEL
@@ -356,132 +264,46 @@ FINANCE:BULLION
 SPACE:LAUNCH_VEHICLE
 ```
 
-A final implementation may use a different technical namespace, but the principle is the same: ownership and identity should be explicit.
-
-Modules should document:
-
-1. which cargoes they introduce;
-2. which existing cargoes they consume or produce;
-3. which cargoes they modify or extend;
-4. which era they target;
-5. which optional dependencies they require.
-
-This improves conceptual compatibility even where NewGRF technical limitations still require careful integration.
+The technical implementation may use another namespace, but ownership and identity must remain explicit.
 
 ## Core vs Optional Cargoes
 
-The reference framework should have a small core vocabulary.
+The core economy should remain compact. Optional modules may add depth, but they must create meaningful economic, geographic, historical, or transportation decisions.
 
-Likely core cargoes include:
-
-```text
-PRIMARY_RESOURCE
-  Grain
-  Timber
-  Fish
-  Coal
-  Iron Ore
-  Stone
-  Oil
-
-PRODUCT
-  Food
-  Lumber
-  Steel
-  Machinery
-  Manufactured Goods
-
-OPERATIONAL_INPUT
-  Tools & Hardware
-  Industrial Equipment
-  Construction Materials
-  Agricultural Supplies
-  Technology Systems
-
-HUMAN_FLOW
-  Passengers
-  Personnel
-  Mail
-```
-
-Additional cargoes should be added when they create a meaningful economic or transportation relationship.
+A cargo should not be added merely because it can be represented technically.
 
 ## Anti-Patterns
 
-Avoid the following unless a specific gameplay purpose justifies them.
+Avoid:
 
-### Era duplication
-
-Do not create separate cargoes merely because the technology changed if the economic role is still the same.
-
-Bad:
-
-```text
-STEAM_TOOLS
-ELECTRIC_TOOLS
-DIGITAL_TOOLS
-AI_TOOLS
-```
-
-Prefer a stable economic identity where practical:
-
-```text
-TOOLS_AND_HARDWARE
-```
-
-### Profession explosion
-
-Do not create separate Personnel cargoes for every occupation merely to provide flavor.
-
-Bad:
-
-```text
-MINERS
-ENGINEERS
-TECHNICIANS
-SCIENTISTS
-OFFSHORE_CREW
-```
-
-Prefer:
-
-```text
-PERSONNEL
-```
-
-with destination context defining the labor relationship.
-
-### Supply fragmentation
-
-Do not create dozens of small supply cargoes when a broader operational-input class produces the same logistics decision.
-
-### Financial overreach
-
-Do not require physical money transport to represent ordinary monetary transactions. Financial cargoes should exist only where physical financial logistics adds gameplay.
-
-### Cargo as industry
-
-Do not encode an industry into the cargo definition. Keep production sites and transported things conceptually separate.
+- using singular `class` or `role` in new machine-readable cargo definitions;
+- using `OPERATIONAL_INPUT` when the current contract is `operational_supply`;
+- creating duplicate cargoes for multiple classes;
+- treating `optional` as a semantic economic role;
+- creating separate cargoes for every technological era;
+- creating profession-specific Personnel cargoes;
+- fragmenting broad supplies into dozens of near-identical cargoes;
+- requiring physical money transport to represent ordinary monetary transactions;
+- encoding an industry into a cargo definition;
+- adding a cargo without a meaningful economic or transportation decision.
 
 ## Design Test for New Cargoes
 
 Before adding a cargo, ask:
 
-1. What semantic role does it have?
-2. What economic relationship does it create?
-3. What industry produces it?
-4. What industry or destination needs it?
-5. What transportation decision does it create?
-6. Does an existing cargo already represent the same economic role?
-7. Does the distinction matter to gameplay?
-8. What era does it belong to?
-9. Which module owns it?
-10. Can another economy use the same semantic definition?
-
-If the answer to the transportation/gameplay question is weak, the cargo probably does not belong in the framework.
+1. What stable identity does it represent?
+2. Which approved class or classes apply?
+3. What economic relationship does it create?
+4. What produces it?
+5. What consumes, accepts, or uses it?
+6. What transportation decision does it create?
+7. Does an existing cargo already represent the same decision?
+8. What era and module own it?
+9. Is `optional` merely describing availability, rather than replacing a semantic class?
+10. Can the relationship be validated without inventing hidden rules?
 
 ## Guiding Principle
 
 > **Define cargoes by economic meaning, not by the number of boxes they occupy.**
 >
-> Keep identities stable. Let industries, eras, geography, and technology provide the depth.
+> Keep identities stable. Let industries, eras, geography, technology, and explicit relationships provide the depth.
