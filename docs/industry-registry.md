@@ -1,6 +1,6 @@
 # OpenTTD Economic Framework — Industry Registry
 
-**Status:** Draft v0.2 — normalized reference registry  
+**Status:** Draft v0.3 — contract-normalized reference registry  
 **Timeline:** 1700–2150
 
 ## 1. Purpose
@@ -37,11 +37,11 @@ A new-construction range does not automatically delete or invalidate an existing
 
 ### Products
 
-`Food`, `Lumber`, `Steel`, `Copper`, `Petroleum Products`, `Machinery`, `Manufactured Goods`, `Electronics`, `Advanced Goods`
+`Food`, `Lumber`, `Steel`, `Copper`, `Petroleum Products`, `Machinery`, `Chemicals`, `Manufactured Goods`, `Electronics`, `Advanced Goods`
 
 ### Operational supplies
 
-`Tools & Hardware`, `Industrial Equipment`, `Construction Materials`, `Agricultural Supplies`, `Technology Systems`, `Fuel`, `Chemicals`
+`Tools & Hardware`, `Industrial Equipment`, `Construction Materials`, `Agricultural Supplies`, `Technology Systems`, `Fuel`
 
 `Chemicals` is intentionally multi-role: it is both a manufactured product and an operational supply. `Fuel` is a stable operational-energy cargo distributed from petroleum products through fuel depots or terminals.
 
@@ -51,12 +51,12 @@ The registry must not use ambiguous `and/or` recipes.
 
 - **Required:** every listed input is required.
 - **Proportional:** output scales with delivered input.
-- **Alternative group:** one or more members of a named group may satisfy the same functional requirement. The validator must define whether the group means *at least one*, *exactly one*, or a weighted substitution.
+- **Alternative group:** one or more members of a named group may satisfy the same functional requirement. The group semantics must be explicitly declared; they must not be inferred from prose.
 - **Preferred:** improves the preferred production path but is not mandatory.
 - **Optional:** may be used without becoming a universal requirement.
 - **Supply:** operational-service relationship, not a production recipe.
 
-Where an industry accepts several food feedstocks, the registry uses the explicit group `food_feedstock` with relationship `alternative`.
+For the core economy, an `alternative` group means **at least one member** of the named group satisfies the functional requirement. A specific recipe may further declare exact-one or weighted substitution semantics when an optional module requires them. The core `food_feedstock` group therefore accepts Grain, Livestock, or Fish as interchangeable feedstocks; it does not imply that all three are required.
 
 ## 5. Historical industry families
 
@@ -132,7 +132,9 @@ Offshore sites create a deliberate round-trip logistics pattern: Personnel, Indu
 | ID | Name | Role | Module | New construction | Hard inputs | Operational supplies | Personnel | Outputs | Predecessor | Successor | Geography | Scale |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|
 | `PRC_STEEL` | Steel Mill | processing | Heavy Industry | 1750–2150 | Iron Ore + Coal | Industrial Equipment; Construction Materials; Fuel | High–Medium / returnable | Steel | — | `PRC_STEEL_ADV` | Ore/coal regions or rail/water corridors | Large |
-| `PRC_STEEL_ADV` | Advanced Steel Works | processing | Heavy Industry | 1980–2150 | Iron Ore + Coal or explicitly enabled Energy alternative | Industrial Equipment; Technology Systems; Fuel | Medium–Low / returnable | Steel | `PRC_STEEL` | — | Major industrial regions | Large |
+| `PRC_STEEL_ADV` | Advanced Steel Works | processing | Heavy Industry | 1980–2150 | Iron Ore + Coal | Industrial Equipment; Technology Systems; Fuel | Medium–Low / returnable | Steel | `PRC_STEEL` | — | Major industrial regions | Large |
+
+**Steel contract:** the core economy uses Iron Ore + Coal. Any energy-substitution recipe belongs to the optional Energy module and must be explicitly enabled there; it is not part of this core registry.
 
 ### 6.4 Petroleum and chemicals
 
@@ -149,13 +151,15 @@ Offshore sites create a deliberate round-trip logistics pattern: Personnel, Indu
 
 | ID | Name | Role | Module | New construction | Hard inputs | Operational supplies | Personnel | Outputs | Predecessor | Successor | Geography | Scale |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|
-| `MFG_MACH` | Machinery Works | manufacturing | Manufacturing | 1800–2150 | Steel + Copper + Chemicals | Industrial Equipment; Technology Systems; Fuel | Medium–High / returnable | Machinery | — | `MFG_MACH_ADV` | Industrial regions | Medium–Large |
+| `MFG_MACH` | Machinery Works | manufacturing | Manufacturing | 1800–2150 | Steel + Copper | Industrial Equipment; Technology Systems; Fuel; Chemicals (preferred/optional) | Medium–High / returnable | Machinery | — | `MFG_MACH_ADV` | Industrial regions | Medium–Large |
 | `MFG_MACH_ADV` | Advanced Machinery Works | manufacturing | Manufacturing | 1950–2150 | Steel + Copper + Chemicals | Technology Systems; Industrial Equipment; Fuel | Medium–Low / returnable | Machinery | `MFG_MACH` | — | Advanced industrial regions | Large |
 | `MFG_FACTORY` | Factory | manufacturing | Manufacturing | 1850–2150 | Steel + Lumber | Industrial Equipment; Tools & Hardware; Fuel | Medium / returnable | Manufactured Goods | — | `MFG_FACTORY_ADV` | Industrial/urban regions | Medium–Large |
 | `MFG_FACTORY_ADV` | Advanced Factory | manufacturing | Manufacturing | 1980–2150 | Steel + Lumber + Machinery | Technology Systems; Industrial Equipment; Fuel | Low–Medium / returnable | Manufactured Goods | `MFG_FACTORY` | — | Major industrial regions | Large |
 | `MFG_ELECTRONICS` | Electronics Works | manufacturing | Technology | 1950–2150 | Copper + Chemicals | Technology Systems; Industrial Equipment; Fuel | Medium–Low / returnable | Electronics | — | `MFG_ELECTRONICS_ADV` | Technology/industrial regions | Medium–Large |
 | `MFG_ELECTRONICS_ADV` | Advanced Electronics Works | manufacturing | Technology | 2000–2150 | Copper + Chemicals + Machinery | Technology Systems; Industrial Equipment; Fuel | Low / returnable | Electronics | `MFG_ELECTRONICS` | — | Advanced technology regions | Large |
 | `MFG_ADVANCED` | Advanced Goods Works | manufacturing | Advanced Technology | 2000–2150 | Electronics + Chemicals + Machinery | Technology Systems; Industrial Equipment; Fuel | Low–Medium / returnable | Advanced Goods | — | — | Advanced technology regions | Large |
+
+**Manufacturing contract:** Base Machinery is Steel + Copper, with Chemicals preferred/optional. Advanced Machinery adds Chemicals as a required production input. Base Factory is Steel + Lumber; Advanced Factory adds Machinery. Base Electronics is Copper + Chemicals; Advanced Electronics adds Machinery. These are historical production-state changes, not new cargo identities.
 
 No separate `intermediate-copper` cargo exists. The canonical copper chain is `Copper Ore → Copper Works → Copper`.
 
@@ -164,11 +168,12 @@ No separate `intermediate-copper` cargo exists. The canonical copper chain is `C
 | ID | Name | Role | Module | New construction | Hard inputs | Operational supplies | Personnel | Outputs | Geography | Scale |
 |---|---|---|---|---|---|---|---|---|---|---|
 | `SUP_COPPER` | Copper Works | processing | Heavy Industry | 1850–2150 | Copper Ore | Industrial Equipment; Fuel | Medium / returnable | Copper | Copper-bearing/industrial regions | Medium–Large |
+| `SUP_COPPER_AUTO` | Automated Copper Works | processing | Heavy Industry | 1980–2150 | Copper Ore | Industrial Equipment; Technology Systems; Fuel | Low–Medium / returnable | Copper | Advanced copper/industrial regions | Large |
 | `SUP_CONSTRUCTION` | Construction Materials Works | supply_production | Construction | 1700–2150 | Stone + Clay + Lumber + Steel | Industrial Equipment; Fuel | Medium / returnable | Construction Materials | Construction/industrial regions | Medium–Large |
-| `SUP_AGRICULTURE` | Agricultural Supplies Works | supply_production | Agriculture | 1800–2150 | Chemicals + Food-processing or approved agricultural feedstock | Industrial Equipment; Technology Systems; Fuel | Medium / returnable | Agricultural Supplies | Agricultural/industrial regions | Medium–Large |
+| `SUP_AGRICULTURE` | Agricultural Supplies Works | supply_production | Agriculture | 1800–2150 | Chemicals + Machinery | Industrial Equipment; Technology Systems; Fuel | Medium / returnable | Agricultural Supplies | Agricultural/industrial regions | Medium–Large |
 | `SUP_FUEL` | Fuel Depot / Terminal | logistics | Energy | 1850–2150 | Petroleum Products | Industrial Equipment; Fuel | Low / returnable | Fuel | Ports, rail hubs, truck hubs, airports | Small–Large |
 
-`Fuel Depot / Terminal` is a logistics and distribution node, not a refinery or chemical-manufacturing substitute.
+`SUP_COPPER_AUTO` succeeds `SUP_COPPER` and preserves the stable Copper product identity. `Fuel Depot / Terminal` is a logistics and distribution node, not a refinery or chemical-manufacturing substitute.
 
 ## 9. Ports and logistics
 
@@ -197,6 +202,14 @@ Ports are economic organisms with changing roles, not merely interchangeable sta
 
 Succession is represented here as one predecessor/successor relationship per industry family. A future machine-readable definition should make this relationship the single source of truth rather than duplicating competing succession records in multiple files.
 
+Explicit copper succession is:
+
+```text
+SUP_COPPER — Copper Works
+      ↓
+SUP_COPPER_AUTO — Automated Copper Works
+```
+
 Successors may change:
 
 - base capacity;
@@ -221,6 +234,10 @@ They should not create duplicate cargo identities merely because technology chan
 8. Do not introduce a successor without documenting its predecessor and transition logic.
 9. Do not introduce a module dependency that is not explicitly declared.
 10. Validate source coverage, consumer coverage, recipe semantics, cycles, dependency depth, era consistency, and module isolation before implementation.
+11. Keep the core Steel recipe as Iron Ore + Coal; Energy-module substitutions must be explicitly enabled.
+12. Keep base Machinery at Steel + Copper; Chemicals becomes required only for Advanced Machinery.
+13. Define base and advanced Factory/Electronics input changes explicitly rather than using ambiguous historical wording.
+14. Agricultural Supplies production uses Chemicals + Machinery.
 
 ## 13. Implementation boundary
 

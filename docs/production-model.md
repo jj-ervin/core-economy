@@ -1,6 +1,6 @@
 # OpenTTD Economic Framework — Production Model
 
-**Status:** Draft v0.2
+**Status:** Draft v0.3 — contract-normalized
 
 ## Purpose
 
@@ -48,8 +48,10 @@ Canonical examples:
 Iron Ore + Coal → Steel Mill → Steel
 Copper Ore → Copper Works → Copper
 Oil → Refinery → Petroleum Products
-Petroleum Products / defined feedstocks → Chemical Works → Chemicals
+Petroleum Products / defined Gas-feedstock option → Chemical Works → Chemicals
 ```
+
+The **core Steel recipe is always Iron Ore + Coal**. An alternate energy pathway may exist only inside the optional Energy module and must be explicitly enabled; it is not a core recipe.
 
 The framework distinguishes the following input relationships:
 
@@ -64,6 +66,8 @@ The framework distinguishes the following input relationships:
 
 Do not write ambiguous `and/or` recipes. If an industry can use several interchangeable feedstocks, define an explicit group.
 
+For the core economy, an alternative group means **at least one member** satisfies the functional requirement. Exact-one or weighted substitution must be explicitly declared if a future module needs it.
+
 Example:
 
 ```text
@@ -73,13 +77,51 @@ Food Processing
   members: Grain, Livestock, Fish
 ```
 
-The validator must define whether the group requires at least one member, a specified number of members, or a proportional combination. The meaning must not be inferred from prose.
+The validator must enforce the declared group semantics rather than infer them from prose.
+
+## Canonical Manufacturing Recipe States
+
+Historical technology changes production requirements without creating duplicate cargo identities.
+
+### Machinery
+
+```text
+Base Machinery:
+  Steel + Copper → Machinery
+  Chemicals = preferred/optional
+
+Advanced Machinery:
+  Steel + Copper + Chemicals → Machinery
+```
+
+### Manufactured Goods
+
+```text
+Base Factory:
+  Steel + Lumber → Manufactured Goods
+
+Advanced Factory:
+  Steel + Lumber + Machinery → Manufactured Goods
+```
+
+### Electronics
+
+```text
+Base Electronics:
+  Copper + Chemicals → Electronics
+  Machinery = preferred/optional
+
+Advanced Electronics:
+  Copper + Chemicals + Machinery → Electronics
+```
+
+These recipe-state changes are structural economic rules. Quantities and balancing coefficients remain implementation/playtesting parameters.
 
 ## Operational-Supply Service
 
 Operational supplies improve productivity, capacity, reliability, efficiency, maintenance, expansion, or modernization. They are not universal hard prerequisites.
 
-The current operational-supply vocabulary is:
+The canonical operational-supply vocabulary is:
 
 1. Tools & Hardware
 2. Industrial Equipment
@@ -87,7 +129,8 @@ The current operational-supply vocabulary is:
 4. Agricultural Supplies
 5. Technology Systems
 6. Fuel
-7. Chemicals
+
+`Chemicals` is a multi-role cargo: it is a manufactured product and may also be consumed as an operational supply where an industry explicitly declares that relationship.
 
 Fuel represents aggregated energy and movement support. Chemicals represents aggregated industrial and process chemicals, including relevant lubricants, coolants, solvents, reagents, and related materials. These identities should not be fragmented into separate cargoes unless a distinct transportation or gameplay decision requires it.
 
@@ -138,6 +181,20 @@ Port
   Industrial Equipment
   Construction Materials
 ```
+
+### Agricultural Supplies
+
+The canonical Agricultural Supplies producer is:
+
+```text
+Chemicals + Machinery
+        ↓
+Agricultural Supply Works
+        ↓
+Agricultural Supplies
+```
+
+This is a production recipe, not a generic "food-processing or agricultural feedstock" relationship.
 
 ## Personnel / Labor
 
