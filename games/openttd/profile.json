@@ -1,0 +1,49 @@
+{
+  "id": "openttd",
+  "name": "OpenTTD Historical Transport Profile",
+  "core_economy": "reference_economy",
+  "core_version": "0.4.0",
+  "enabled_modules": [
+    "core",
+    "materials",
+    "energy",
+    "chemicals",
+    "technology",
+    "agriculture",
+    "forestry",
+    "fisheries",
+    "heavy_industry",
+    "construction",
+    "food",
+    "manufacturing",
+    "offshore",
+    "ports"
+  ],
+  "runtime": {
+    "newgrf": true,
+    "gamescript": true,
+    "ai": true,
+    "sidecar": true
+  },
+  "implementation_layers": {
+    "content": "newgrf",
+    "world_state": "gamescript",
+    "transport_ai": "ai",
+    "analytics": "sidecar"
+  },
+  "policy": {
+    "canonical_data_immutable": true,
+    "runtime_adjustments_bounded": true,
+    "adjustments_recorded": true
+  },
+  "known_adapters": [
+    "personnel_flow",
+    "settlement_lifecycle",
+    "resource_discovery",
+    "dynamic_demand",
+    "dynamic_pricing",
+    "contracts",
+    "economic_events",
+    "causal_logging"
+  ]
+}
