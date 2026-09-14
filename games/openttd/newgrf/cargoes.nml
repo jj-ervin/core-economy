@@ -1,0 +1,23 @@
+// Core Economy Cargo Definitions (Vertical Slice v0.4.0)
+// Note: COAL, IORE, and STEL are standard OpenTTD built-in cargoes declared in cargotable.
+// Only custom cargoes (COKE) require explicit FEAT_CARGOS item definitions.
+
+item(FEAT_CARGOS, cargo_coke, 2) {
+    property {
+        cargo_label: "COKE";
+        type_name: string(STR_CARGO_NAME_COKE);
+        unit_name: string(STR_CARGO_UNIT_COKE);
+        type_abbreviation: string(STR_CARGO_ABBREV_COKE);
+        sprite: 4281;
+        weight: 1.0;
+        penalty_lowerbound: 18;
+        single_penalty_length: 255;
+        price_factor: 120;
+        station_list_colour: 190;
+        cargo_payment_list_colour: 190;
+        is_freight: 1;
+        cargo_classes: bitmask(CC_BULK);
+        town_growth_effect: TOWNGROWTH_NONE;
+        town_growth_multiplier: 1.0;
+    }
+}

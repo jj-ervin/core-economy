@@ -1,0 +1,22 @@
+// Production Callbacks for Core Economy Vertical Slice Processing Industries
+
+produce(coke_works_produce_cb,
+    [
+        COAL: incoming_cargo_waiting("COAL");
+    ],
+    [
+        COKE: incoming_cargo_waiting("COAL");
+    ],
+    0
+)
+
+produce(steel_mill_produce_cb,
+    [
+        IORE: min(incoming_cargo_waiting("IORE"), incoming_cargo_waiting("COKE"));
+        COKE: min(incoming_cargo_waiting("IORE"), incoming_cargo_waiting("COKE"));
+    ],
+    [
+        STEL: min(incoming_cargo_waiting("IORE"), incoming_cargo_waiting("COKE"));
+    ],
+    0
+)

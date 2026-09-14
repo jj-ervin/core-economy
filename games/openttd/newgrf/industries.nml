@@ -1,0 +1,78 @@
+// Core Economy Industry Definitions (Vertical Slice v0.4.0)
+
+// MIN_COAL_EARLY — Coal Mine (available 1700)
+item(FEAT_INDUSTRIES, ind_coal_mine) {
+    property {
+        substitute: INDUSTRYTYPE_COAL_MINE;
+        override: INDUSTRYTYPE_COAL_MINE;
+        name: string(STR_IND_COAL_MINE);
+        nearby_station_name: string(STR_STATION_COAL_MINE);
+        fund_cost_multiplier: 120;
+        cargo_types: [produce_cargo("COAL", 10)];
+        prob_in_game: 5;
+        prob_random: 5;
+        prospect_chance: 0;
+        layouts: [layout_coal_mine];
+    }
+}
+
+// MIN_IRON — Iron Mine (available 1700)
+item(FEAT_INDUSTRIES, ind_iron_mine) {
+    property {
+        substitute: INDUSTRYTYPE_IRON_ORE_MINE;
+        override: INDUSTRYTYPE_IRON_ORE_MINE;
+        name: string(STR_IND_IRON_MINE);
+        nearby_station_name: string(STR_STATION_IRON_MINE);
+        fund_cost_multiplier: 120;
+        cargo_types: [produce_cargo("IORE", 10)];
+        prob_in_game: 5;
+        prob_random: 5;
+        prospect_chance: 0;
+        layouts: [layout_iron_mine];
+    }
+}
+
+// PRC_COKE — Coke Works (available 1750)
+item(FEAT_INDUSTRIES, ind_coke_works) {
+    property {
+        substitute: INDUSTRYTYPE_TEMPERATE_FACTORY;
+        override: INDUSTRYTYPE_TEMPERATE_FACTORY;
+        name: string(STR_IND_COKE_WORKS);
+        nearby_station_name: string(STR_STATION_COKE_WORKS);
+        fund_cost_multiplier: 150;
+        cargo_types: [accept_cargo("COAL", produce_cargo("COKE", 0))];
+        prob_in_game: 4;
+        prob_random: 4;
+        prospect_chance: 0;
+        layouts: [layout_coke_works];
+    }
+    graphics {
+        location_check: current_year >= 1750 ? CB_RESULT_LOCATION_ALLOW : CB_RESULT_LOCATION_DISALLOW;
+        construction_probability: current_year >= 1750 ? 4 : 0;
+        produce_cargo_arrival: coke_works_produce_cb;
+    }
+}
+
+// PRC_STEEL — Steel Mill (available 1750)
+item(FEAT_INDUSTRIES, ind_steel_mill) {
+    property {
+        substitute: INDUSTRYTYPE_STEEL_MILL;
+        override: INDUSTRYTYPE_STEEL_MILL;
+        name: string(STR_IND_STEEL_MILL);
+        nearby_station_name: string(STR_STATION_STEEL_MILL);
+        fund_cost_multiplier: 180;
+        cargo_types: [
+            accept_cargo("IORE", produce_cargo("STEL", 0)),
+            accept_cargo("COKE", produce_cargo("STEL", 0))
+        ];
+        prob_in_game: 4;
+        prob_random: 4;
+        prospect_chance: 0;
+        layouts: [layout_steel_mill];
+    }
+    graphics {
+        location_check: current_year >= 1750 ? CB_RESULT_LOCATION_ALLOW : CB_RESULT_LOCATION_DISALLOW;
+        construction_probability: current_year >= 1750 ? 4 : 0;
+        produce_cargo_arrival: steel_mill_produce_cb;
+    }
+}

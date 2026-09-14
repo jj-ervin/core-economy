@@ -1,0 +1,282 @@
+// Main entry point for Core Economy OpenTTD NewGRF Adapter
+// Core Economy v0.4.0 Vertical Slice
+
+grf {
+    grfid: "CE\04\01";
+    name: string(STR_GRF_NAME);
+    desc: string(STR_GRF_DESC);
+    version: 1;
+    min_compatible_version: 1;
+}
+
+cargotable {
+    COAL,
+    IORE,
+    COKE,
+    STEL
+}
+
+// Core Economy Cargo Definitions (Vertical Slice v0.4.0)
+item(FEAT_CARGOS, cargo_coke, 2) {
+    property {
+        cargo_label: "COKE";
+        type_name: string(STR_CARGO_NAME_COKE);
+        unit_name: string(STR_CARGO_UNIT_COKE);
+        type_abbreviation: string(STR_CARGO_ABBREV_COKE);
+        sprite: 4281;
+        weight: 1.0;
+        penalty_lowerbound: 18;
+        single_penalty_length: 255;
+        price_factor: 120;
+        station_list_colour: 190;
+        cargo_payment_list_colour: 190;
+        is_freight: 1;
+        cargo_classes: bitmask(CC_BULK);
+        town_growth_effect: TOWNGROWTH_NONE;
+        town_growth_multiplier: 1.0;
+    }
+}
+
+// Minimal Graphics Substitution for Industry Tiles
+
+item(FEAT_INDUSTRYTILES, tile_coal_mine_1) {
+    property {
+        substitute: 0x08;
+        override: 0x08;
+    }
+}
+
+item(FEAT_INDUSTRYTILES, tile_coal_mine_2) {
+    property {
+        substitute: 0x09;
+        override: 0x09;
+    }
+}
+
+item(FEAT_INDUSTRYTILES, tile_coal_mine_3) {
+    property {
+        substitute: 0x0A;
+        override: 0x0A;
+    }
+}
+
+item(FEAT_INDUSTRYTILES, tile_coal_mine_4) {
+    property {
+        substitute: 0x0B;
+        override: 0x0B;
+    }
+}
+
+tilelayout layout_coal_mine {
+    0, 0: tile_coal_mine_1;
+    0, 1: tile_coal_mine_2;
+    1, 0: tile_coal_mine_3;
+    1, 1: tile_coal_mine_4;
+}
+
+item(FEAT_INDUSTRYTILES, tile_iron_mine_1) {
+    property {
+        substitute: 0x12;
+        override: 0x12;
+    }
+}
+
+item(FEAT_INDUSTRYTILES, tile_iron_mine_2) {
+    property {
+        substitute: 0x13;
+        override: 0x13;
+    }
+}
+
+item(FEAT_INDUSTRYTILES, tile_iron_mine_3) {
+    property {
+        substitute: 0x14;
+        override: 0x14;
+    }
+}
+
+item(FEAT_INDUSTRYTILES, tile_iron_mine_4) {
+    property {
+        substitute: 0x15;
+        override: 0x15;
+    }
+}
+
+tilelayout layout_iron_mine {
+    0, 0: tile_iron_mine_1;
+    0, 1: tile_iron_mine_2;
+    1, 0: tile_iron_mine_3;
+    1, 1: tile_iron_mine_4;
+}
+
+item(FEAT_INDUSTRYTILES, tile_coke_works_1) {
+    property {
+        substitute: 0x1E;
+        override: 0x1E;
+    }
+}
+
+item(FEAT_INDUSTRYTILES, tile_coke_works_2) {
+    property {
+        substitute: 0x1F;
+        override: 0x1F;
+    }
+}
+
+item(FEAT_INDUSTRYTILES, tile_coke_works_3) {
+    property {
+        substitute: 0x20;
+        override: 0x20;
+    }
+}
+
+item(FEAT_INDUSTRYTILES, tile_coke_works_4) {
+    property {
+        substitute: 0x21;
+        override: 0x21;
+    }
+}
+
+tilelayout layout_coke_works {
+    0, 0: tile_coke_works_1;
+    0, 1: tile_coke_works_2;
+    1, 0: tile_coke_works_3;
+    1, 1: tile_coke_works_4;
+}
+
+item(FEAT_INDUSTRYTILES, tile_steel_mill_1) {
+    property {
+        substitute: 0x00;
+        override: 0x00;
+    }
+}
+
+item(FEAT_INDUSTRYTILES, tile_steel_mill_2) {
+    property {
+        substitute: 0x01;
+        override: 0x01;
+    }
+}
+
+item(FEAT_INDUSTRYTILES, tile_steel_mill_3) {
+    property {
+        substitute: 0x02;
+        override: 0x02;
+    }
+}
+
+item(FEAT_INDUSTRYTILES, tile_steel_mill_4) {
+    property {
+        substitute: 0x03;
+        override: 0x03;
+    }
+}
+
+tilelayout layout_steel_mill {
+    0, 0: tile_steel_mill_1;
+    0, 1: tile_steel_mill_2;
+    1, 0: tile_steel_mill_3;
+    1, 1: tile_steel_mill_4;
+}
+
+// Production Callbacks for Core Economy Vertical Slice Processing Industries
+
+produce(coke_works_produce_cb,
+    [
+        COAL: incoming_cargo_waiting("COAL");
+    ],
+    [
+        COKE: incoming_cargo_waiting("COAL");
+    ],
+    0
+)
+
+produce(steel_mill_produce_cb,
+    [
+        IORE: min(incoming_cargo_waiting("IORE"), incoming_cargo_waiting("COKE"));
+        COKE: min(incoming_cargo_waiting("IORE"), incoming_cargo_waiting("COKE"));
+    ],
+    [
+        STEL: min(incoming_cargo_waiting("IORE"), incoming_cargo_waiting("COKE"));
+    ],
+    0
+)
+
+// Core Economy Industry Definitions (Vertical Slice v0.4.0)
+
+// MIN_COAL_EARLY — Coal Mine (available 1700)
+item(FEAT_INDUSTRIES, ind_coal_mine) {
+    property {
+        substitute: INDUSTRYTYPE_COAL_MINE;
+        override: INDUSTRYTYPE_COAL_MINE;
+        name: string(STR_IND_COAL_MINE);
+        nearby_station_name: string(STR_STATION_COAL_MINE);
+        fund_cost_multiplier: 120;
+        cargo_types: [produce_cargo("COAL", 10)];
+        prob_in_game: 5;
+        prob_random: 5;
+        prospect_chance: 0;
+        layouts: [layout_coal_mine];
+    }
+}
+
+// MIN_IRON — Iron Mine (available 1700)
+item(FEAT_INDUSTRIES, ind_iron_mine) {
+    property {
+        substitute: INDUSTRYTYPE_IRON_ORE_MINE;
+        override: INDUSTRYTYPE_IRON_ORE_MINE;
+        name: string(STR_IND_IRON_MINE);
+        nearby_station_name: string(STR_STATION_IRON_MINE);
+        fund_cost_multiplier: 120;
+        cargo_types: [produce_cargo("IORE", 10)];
+        prob_in_game: 5;
+        prob_random: 5;
+        prospect_chance: 0;
+        layouts: [layout_iron_mine];
+    }
+}
+
+// PRC_COKE — Coke Works (available 1750)
+item(FEAT_INDUSTRIES, ind_coke_works) {
+    property {
+        substitute: INDUSTRYTYPE_TEMPERATE_FACTORY;
+        override: INDUSTRYTYPE_TEMPERATE_FACTORY;
+        name: string(STR_IND_COKE_WORKS);
+        nearby_station_name: string(STR_STATION_COKE_WORKS);
+        fund_cost_multiplier: 150;
+        cargo_types: [accept_cargo("COAL", produce_cargo("COKE", 0))];
+        prob_in_game: 4;
+        prob_random: 4;
+        prospect_chance: 0;
+        layouts: [layout_coke_works];
+    }
+    graphics {
+        location_check: current_year >= 1750 ? CB_RESULT_LOCATION_ALLOW : CB_RESULT_LOCATION_DISALLOW;
+        construction_probability: current_year >= 1750 ? 4 : 0;
+        produce_cargo_arrival: coke_works_produce_cb;
+    }
+}
+
+// PRC_STEEL — Steel Mill (available 1750)
+item(FEAT_INDUSTRIES, ind_steel_mill) {
+    property {
+        substitute: INDUSTRYTYPE_STEEL_MILL;
+        override: INDUSTRYTYPE_STEEL_MILL;
+        name: string(STR_IND_STEEL_MILL);
+        nearby_station_name: string(STR_STATION_STEEL_MILL);
+        fund_cost_multiplier: 180;
+        cargo_types: [
+            accept_cargo("IORE", produce_cargo("STEL", 0)),
+            accept_cargo("COKE", produce_cargo("STEL", 0))
+        ];
+        prob_in_game: 4;
+        prob_random: 4;
+        prospect_chance: 0;
+        layouts: [layout_steel_mill];
+    }
+    graphics {
+        location_check: current_year >= 1750 ? CB_RESULT_LOCATION_ALLOW : CB_RESULT_LOCATION_DISALLOW;
+        construction_probability: current_year >= 1750 ? 4 : 0;
+        produce_cargo_arrival: steel_mill_produce_cb;
+    }
+}
