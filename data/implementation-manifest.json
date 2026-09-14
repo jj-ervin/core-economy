@@ -1,0 +1,55 @@
+{
+  "id": "core_economy_implementation",
+  "version": "0.4.1",
+  "canonical_economy_version": "0.4.1",
+  "runtime": {
+    "newgrf": {
+      "status": "implemented",
+      "scope": "v0.4.0 historical steelmaking vertical slice"
+    },
+    "gamescript": {
+      "status": "planned",
+      "scope": "Core Economy Dynamics; not yet shipped"
+    },
+    "sidecar": {
+      "status": "deferred",
+      "scope": "external analytics/admin tooling only; not required for core gameplay"
+    }
+  },
+  "implemented_industries": [
+    "MIN_COAL_EARLY",
+    "MIN_IRON",
+    "PRC_COKE",
+    "PRC_STEEL"
+  ],
+  "implemented_custom_cargoes": [
+    "coke"
+  ],
+  "implemented_vanilla_cargo_labels": [
+    "coal",
+    "iron_ore",
+    "steel"
+  ],
+  "era_status": {
+    "era_1": "partial",
+    "era_2": "not_implemented",
+    "era_3": "not_implemented",
+    "era_4": "not_implemented"
+  },
+  "planned_era_1_vertical_slice": [
+    "agriculture",
+    "food",
+    "forestry",
+    "construction",
+    "materials",
+    "coal_coke_iron_steel",
+    "personnel",
+    "operational_supplies",
+    "town_demand"
+  ],
+  "notes": [
+    "Canonical industries are design specifications until present in this manifest as implemented and covered by executable validation/build tests.",
+    "Lifecycle successor relationships do not imply automatic deletion of predecessor industries.",
+    "Future custom industry IDs require a validated OpenTTD/NML prototype before the current override strategy is expanded."
+  ]
+}
