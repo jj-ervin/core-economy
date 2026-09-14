@@ -1,4 +1,4 @@
-name: Economy Contract Validation
+name: Economy Contract & NewGRF Validation
 
 on:
   push:
@@ -8,7 +8,8 @@ on:
       - 'data/reference-economy/**'
       - 'schema/**'
       - 'tools/validate_economy.py'
-      - '.github/workflows/economy-validation.yml'
+      - 'games/openttd/newgrf/**'
+      - '.github/workflows/**'
 
 jobs:
   validate-economy:
@@ -18,5 +19,11 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.x'
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install nml
       - name: Validate core economy contract
         run: python tools/validate_economy.py
+      - name: Compile OpenTTD NewGRF
+        run: nmlc -o games/openttd/newgrf/core_economy.grf --lang=games/openttd/newgrf/lang games/openttd/newgrf/core_economy.nml
