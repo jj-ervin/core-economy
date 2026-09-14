@@ -1,0 +1,17 @@
+[
+{"id":"core","name":"Core Economy","depends_on":[],"enabled_by_default":true},
+{"id":"materials","name":"Materials Layer","depends_on":["core"],"enabled_by_default":true},
+{"id":"energy","name":"Energy","depends_on":["core","materials"],"enabled_by_default":true},
+{"id":"chemicals","name":"Chemicals","depends_on":["energy","materials"],"enabled_by_default":true},
+{"id":"technology","name":"Technology","depends_on":["materials","chemicals"],"enabled_by_default":true},
+{"id":"financial","name":"Financial Demand","depends_on":["materials"],"enabled_by_default":true},
+{"id":"agriculture","name":"Agriculture","depends_on":["core"],"enabled_by_default":true},
+{"id":"forestry","name":"Forestry","depends_on":["core"],"enabled_by_default":true},
+{"id":"fisheries","name":"Fisheries","depends_on":["core"],"enabled_by_default":true},
+{"id":"heavy_industry","name":"Heavy Industry","depends_on":["materials","energy"],"enabled_by_default":true},
+{"id":"construction","name":"Construction","depends_on":["materials"],"enabled_by_default":true},
+{"id":"food","name":"Food","depends_on":["agriculture","fisheries"],"enabled_by_default":true},
+{"id":"manufacturing","name":"Manufacturing","depends_on":["materials","energy"],"enabled_by_default":true},
+{"id":"offshore","name":"Offshore","depends_on":["energy","construction","heavy_industry"],"enabled_by_default":true},
+{"id":"ports","name":"Ports and Logistics","depends_on":["core"],"enabled_by_default":true}
+]
