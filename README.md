@@ -8,9 +8,58 @@ The framework is packaged as an **optional, downloadable OpenTTD NewGRF mod** (`
 
 ## What is Core Economy?
 
-Core Economy replaces or expands standard OpenTTD industries with historically grounded economic chains. It separates:
-- **Canonical Economy Contract** (`data/reference-economy/`): JSON specifications of industries, cargoes, recipes, and eras.
-- **OpenTTD NewGRF Adapter** (`games/openttd/newgrf/`): Compiled NML definitions mapping canonical definitions to OpenTTD graphics, callbacks, and cargo labels.
+Core Economy is designed as a **1700–2299 economy** made of four independently playable 150-year economic eras:
+
+| Era | Years |
+|---|---:|
+| Era 1 — Early Industrial | 1700–1849 |
+| Era 2 — Industrial & Mass Production | 1850–1999 |
+| Era 3 — Advanced Global Economy | 2000–2149 |
+| Era 4 — Future Economy | 2150–2299 |
+
+Each era is intended to function as a coherent **mini-economy slice** that can be selected as a starting period. A full campaign can run continuously through all four eras.
+
+### Industries persist by default
+
+Core Economy does **not** treat each era as a replacement economy. Agriculture, forestry, construction, food production, logistics, and other foundational sectors are expected to persist while their technology, recipes, productivity, scale, and economic importance change.
+
+Industry lifecycle classes are:
+
+- `persistent`
+- `transforming`
+- `emerging`
+- `declining`
+- `phase_out`
+
+A successor industry represents a technological/economic successor; it does **not** automatically mean the predecessor is destroyed when the successor appears.
+
+### Construction economy
+
+Construction is a persistent economic pillar. The planned construction-material chain includes timber/lumber, stone, aggregates, lime/cement, ceramics, glass, steel, and later engineered materials. **Cement is part of the planned canonical economy and will be implemented as part of that chain rather than as an isolated addition.**
+
+### Economic geography
+
+The long-term design treats distance, transport speed, capacity, and infrastructure as important economic constraints. Earlier eras should favor shorter regional supply chains; later eras should support longer-distance specialization and larger markets.
+
+---
+
+## Architecture
+
+Core Economy separates the canonical economy from the runtime implementation:
+
+```text
+Canonical Economy
+       │
+       ├── NewGRF
+       │    industries / cargo / recipes / production / date gates
+       │
+       └── Core Economy Dynamics (future GameScript)
+            settlements / population / dynamic state / events
+```
+
+An external sidecar/Admin Port integration is **deferred** and is not required for the core economy.
+
+The canonical economy is intentionally broader than the currently shipped NewGRF. See `data/implementation-manifest.json` for the authoritative implementation boundary.
 
 ---
 
@@ -32,6 +81,8 @@ Iron Mine (1700) ────> Iron Ore ─────────────�
 - **1700:** `Coal Mine` (`MIN_COAL_EARLY`) and `Iron Mine` (`MIN_IRON`) become available.
 - **1750:** `Coke Works` (`PRC_COKE`) and `Steel Mill` (`PRC_STEEL`) become available.
 - **Absolute Boundary:** Coke Works and Steel Mill use absolute engine location-check gates. They cannot be randomly spawned or manually funded prior to 1750.
+
+**Important:** v0.4.0 is a prototype slice, not the complete 1700–2299 economy. The current NewGRF implements four industries; the larger canonical economy remains planned/specification data.
 
 ---
 
@@ -80,9 +131,12 @@ nmlc -o games/openttd/newgrf/core_economy.grf --lang=games/openttd/newgrf/lang g
 
 ```text
 data/reference-economy/   # Canonical economy contracts (JSON)
+data/implementation-manifest.json # What is actually implemented/shipped
 schema/                   # JSON schemas for cargoes, industries, recipes
+validation/               # Validation rules and constraints
 tools/                    # Contract validators (validate_economy.py)
 games/openttd/newgrf/     # NML source code and OpenTTD mapping docs
+docs/architecture-v0.4.1.md # Runtime boundaries, era model, and design rules
 .github/workflows/        # CI/CD and release automation workflows
 ```
 
