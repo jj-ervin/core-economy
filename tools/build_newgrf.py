@@ -22,12 +22,12 @@ grf {
     min_compatible_version: 1;
 }
 
-// Built-in cargoes used by the current vertical slice plus the custom Coke cargo.
+// Canonical cargo translation table. Order is the stable adapter slot order.
 cargotable {
-    COAL,
-    IORE,
-    COKE,
-    STEL
+    GRAI, LVST, WOOD, FISH, COAL, IORE, STON, CLAY, OIL_, GAS_, CORE, SAND,
+    BAUX, TIO_, GORE, SORE, REOR, COKE, STEL, COPP, GLAS, CERA, ALUM, TITN,
+    GOLD, SILV, REMT, LIME, CEMT, FOOD, LUMB, PETR, MACH, CHEM, MNFG, ELEC,
+    ADVG, HARD, INDE, CNST, AGRI, TECH, FUEL, PASS, PERS, MAIL
 }
 """
 
