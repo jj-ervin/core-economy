@@ -1,5 +1,5 @@
 {
-  "$schema": "https://github.com/jj-ervin/open-ttd/schema/cargo.schema.json",
+  "$schema": "https://github.com/jj-ervin/core-economy/schema/cargo.schema.json",
   "id": "chemicals",
   "name": "Chemicals",
   "classes": [
