@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://github.com/jj-ervin/open-ttd/schema/recipe.schema.json",
+  "$id": "https://github.com/jj-ervin/core-economy/schema/recipe.schema.json",
   "title": "OpenTTD Economy Recipe",
   "type": "object",
   "required": ["id", "output", "inputs"],
