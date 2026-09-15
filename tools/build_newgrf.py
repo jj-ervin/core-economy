@@ -39,6 +39,21 @@ FRAGMENTS = (
 )
 
 
+def prepare_fragment(filename: str, text: str) -> str:
+    """Return NML-safe source for the assembled entry point.
+
+    cargoes.nml currently contains an unused C-style macro template. NML 0.9
+    does not accept that preprocessor syntax, so keep the template in the
+    modular source but exclude the unused template from the generated entry
+    point. No cargo definitions or economic data are changed here.
+    """
+    if filename == "cargoes.nml" and text.startswith("// Core Economy canonical cargo definitions."):
+        marker = "// Primary extraction and resource cargos."
+        if marker in text and "#define CARGO_DEFAULT_PROPERTIES" in text:
+            text = text[text.index(marker):]
+    return text
+
+
 def main() -> int:
     parts = [HEADER.rstrip(), ""]
     for filename in FRAGMENTS:
@@ -46,6 +61,7 @@ def main() -> int:
         if not path.is_file():
             raise SystemExit(f"missing NML source fragment: {path}")
         text = path.read_text(encoding="utf-8").rstrip()
+        text = prepare_fragment(filename, text)
         parts.extend([f"// --- {filename} ---", text, ""])
 
     OUTPUT.write_text("\n".join(parts), encoding="utf-8")
