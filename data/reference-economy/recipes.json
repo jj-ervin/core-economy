@@ -16,7 +16,7 @@
 {"id":"oil_to_petroleum_products","output":"petroleum_products","output_amount":1,"inputs":[{"cargo":"oil","amount":1,"relationship":"required"}]},
 {"id":"petroleum_products_to_fuel","output":"fuel","output_amount":1,"inputs":[{"cargo":"petroleum_products","amount":1,"relationship":"required"}]},
 {"id":"petroleum_products_to_chemicals","output":"chemicals","output_amount":1,"inputs":[{"cargo":"petroleum_products","amount":1,"relationship":"required"}]},
-{"id":"gas_to_chemicals","output":"chemicals","output_amount":1,"inputs":[{"cargo":"gas","amount":1,"relationship":"alternative","group":"chemical_feedstock"}]},
+{"id":"gas_to_chemicals","output":"chemicals","output_amount":1,"inputs":[{"cargo":"gas","amount":1,"relationship":"required"}]},
 {"id":"steel_copper_to_machinery","output":"machinery","output_amount":1,"inputs":[{"cargo":"steel","amount":1,"relationship":"required"},{"cargo":"copper","amount":1,"relationship":"required"}]},
 {"id":"steel_copper_chemicals_to_advanced_machinery","output":"machinery","output_amount":1,"inputs":[{"cargo":"steel","amount":1,"relationship":"required"},{"cargo":"copper","amount":1,"relationship":"required"},{"cargo":"chemicals","amount":1,"relationship":"required"}]},
 {"id":"steel_lumber_to_manufactured_goods","output":"manufactured_goods","output_amount":1,"inputs":[{"cargo":"steel","amount":1,"relationship":"required"},{"cargo":"lumber","amount":1,"relationship":"required"}]},
