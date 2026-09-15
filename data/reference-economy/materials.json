@@ -8,5 +8,7 @@
   {"id":"titanium","name":"Titanium","classes":["material","product"],"introduced":1940},
   {"id":"gold","name":"Gold","classes":["material","product"],"introduced":1700},
   {"id":"silver","name":"Silver","classes":["material","product"],"introduced":1700},
-  {"id":"rare_earth_materials","name":"Rare Earth Materials","classes":["material","product"],"introduced":1960}
+  {"id":"rare_earth_materials","name":"Rare Earth Materials","classes":["material","product"],"introduced":1960},
+  {"id":"lime","name":"Lime","classes":["material","product"],"introduced":1800},
+  {"id":"cement","name":"Cement","classes":["material","product"],"introduced":1800}
 ]

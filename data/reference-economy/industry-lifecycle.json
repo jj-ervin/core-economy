@@ -11,9 +11,9 @@
     "FIS_COAST": "transforming", "FIS_COMM": "transforming", "FIS_ADV": "persistent",
     "MIN_COAL_EARLY": "transforming", "MIN_COAL_MECH": "transforming", "MIN_COAL_MOD": "declining",
     "MIN_IRON": "transforming", "MIN_IRON_MECH": "persistent", "MIN_COPPER": "transforming", "MIN_COPPER_AUTO": "persistent",
-    "MIN_QUARRY": "persistent", "MIN_CLAY": "persistent", "MIN_OIL_ON": "declining", "MIN_GAS_ON": "declining",
+    "MIN_QUARRY": "persistent", "MIN_CLAY": "persistent", "MIN_BAUXITE": "persistent", "MIN_TITANIUM": "persistent", "MIN_GOLD": "persistent", "MIN_SILVER": "persistent", "MIN_RARE_EARTH": "persistent", "MIN_OIL_ON": "declining", "MIN_GAS_ON": "declining",
     "PRC_COKE": "persistent", "PRC_STEEL": "transforming", "PRC_STEEL_ADV": "persistent", "PRC_COPPER": "transforming", "PRC_COPPER_ADV": "persistent",
-    "PRC_GLASS": "persistent", "PRC_CERAMICS": "persistent", "PRC_ALUMINUM": "persistent", "PRC_TITANIUM": "persistent", "PRC_PRECIOUS_METALS": "persistent", "PRC_RARE_EARTH": "persistent",
+    "PRC_GLASS": "persistent", "PRC_CERAMICS": "persistent", "PRC_ALUMINUM": "persistent", "PRC_TITANIUM": "persistent", "PRC_PRECIOUS_METALS": "persistent", "PRC_RARE_EARTH": "persistent", "PRC_LIME": "persistent", "PRC_CEMENT": "persistent",
     "PRC_FOOD": "transforming", "PRC_FOOD_ADV": "persistent", "PRC_SAWMILL": "transforming", "PRC_SAWMILL_AUTO": "persistent",
     "PRC_REFINERY": "declining", "PRC_REFINERY_ADV": "transforming", "PRC_CHEM": "transforming", "PRC_CHEM_ADV": "persistent",
     "MFG_MACH": "transforming", "MFG_MACH_ADV": "persistent", "MFG_FACTORY": "transforming", "MFG_FACTORY_ADV": "persistent",
@@ -26,9 +26,7 @@
   "sector_rules": {"agriculture":"persistent_sector","forestry":"persistent_sector","construction":"persistent_sector","food":"persistent_sector","ports":"persistent_infrastructure","heavy_industry":"persistent_or_transforming","energy":"transforming_with_decline","materials":"persistent_or_transforming","manufacturing":"persistent_or_transforming","technology":"persistent_or_emerging","financial":"persistent_service"},
   "required_future_work": [
     "Extend or replace industry variants that currently end at 2150 so the 2150-2299 era has explicit coverage.",
-    "Add a coherent cement/lime/concrete construction-material chain.",
     "Define post-2150 energy and refinery roles without assuming immediate extinction.",
-    "Resolve the canonical industry count discrepancy: economy.json currently enumerates 65 industry IDs while project documentation has claimed 68 industries.",
     "Separate economic lifecycle from legacy NML-oriented lifecycle values.",
     "Validate predecessor/successor reciprocity and prevent successor links from implying deletion."
   ]

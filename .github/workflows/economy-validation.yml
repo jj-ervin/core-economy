@@ -8,6 +8,7 @@ on:
       - 'data/reference-economy/**'
       - 'schema/**'
       - 'tools/validate_economy.py'
+      - 'tools/validate_economic_graph.py'
       - 'games/openttd/newgrf/**'
       - '.github/workflows/**'
 
@@ -25,5 +26,7 @@ jobs:
           pip install nml
       - name: Validate core economy contract
         run: python tools/validate_economy.py
+      - name: Validate economic graph
+        run: python tools/validate_economic_graph.py
       - name: Compile OpenTTD NewGRF
         run: nmlc -o games/openttd/newgrf/core_economy.grf --lang=games/openttd/newgrf/lang games/openttd/newgrf/core_economy.nml
