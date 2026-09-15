@@ -1,8 +1,8 @@
 """Validate the Stage 3C Coal -> Coke -> Steel implementation slice.
 
 The economic contract remains authoritative in data/reference-economy. This
-validator only checks that the NML adapter explicitly contains the canonical
-cargo and recipe endpoints for the focused playable chain.
+validator checks that the NML adapter explicitly implements the canonical
+cargo, recipe, and industry endpoints for the focused playable chain.
 """
 from pathlib import Path
 import json
@@ -40,8 +40,18 @@ def main() -> int:
     for label in ("COAL", "IORE", "COKE", "STEL"):
         assert label in cargo_nml or label in (NML / "core_economy.nml").read_text(encoding="utf-8"), f"NML cargo label missing: {label}"
 
-    for token in ("coke_works_produce_cb", "steel_mill_produce_cb", '"COAL"', '"COKE"', '"IORE"', '"STEL"'):
-        assert token in production_nml, f"production adapter missing: {token}"
+    # Match the actual production expressions, not merely cargo-label presence.
+    # These are the canonical 1:1 recipes in recipes.json.
+    assert (
+        'COAL: incoming_cargo_waiting("COAL");' in production_nml
+        and 'COKE: incoming_cargo_waiting("COAL");' in production_nml
+    ), "coke production callback does not implement canonical 1:1 coal -> coke"
+
+    assert (
+        'IORE: min(incoming_cargo_waiting("IORE"), incoming_cargo_waiting("COKE"));' in production_nml
+        and 'COKE: min(incoming_cargo_waiting("IORE"), incoming_cargo_waiting("COKE"));' in production_nml
+        and 'STEL: min(incoming_cargo_waiting("IORE"), incoming_cargo_waiting("COKE"));' in production_nml
+    ), "steel production callback does not implement canonical 1:1 iron ore + coke -> steel"
 
     for token in ("ind_coal_mine", "ind_iron_mine", "ind_coke_works", "ind_steel_mill", "current_year >= 1750"):
         assert token in industries_nml, f"industry adapter missing: {token}"
