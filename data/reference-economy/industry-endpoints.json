@@ -28,6 +28,7 @@
     "PRC_TITANIUM": {"action":"continue","coverage_end":2299},
     "PRC_PRECIOUS_METALS": {"action":"continue","coverage_end":2299},
     "PRC_RARE_EARTH": {"action":"continue","coverage_end":2299},
+    "PRC_LIME": {"action":"continue","coverage_end":2299},
     "PRC_CEMENT": {"action":"continue","coverage_end":2299},
     "PRC_FOOD_ADV": {"action":"continue","coverage_end":2299},
     "PRC_SAWMILL_AUTO": {"action":"continue","coverage_end":2299},
