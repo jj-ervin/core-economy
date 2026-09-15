@@ -5,6 +5,7 @@ modular in source control, then deterministically assemble the entry point
 before compilation.
 """
 from pathlib import Path
+import re
 
 ROOT = Path(__file__).resolve().parents[1]
 NEWGRF = ROOT / "games" / "openttd" / "newgrf"
@@ -31,6 +32,18 @@ cargotable {
 }
 """
 
+CANONICAL_SLOTS = {
+    label: slot
+    for slot, label in enumerate([
+        "GRAI", "LVST", "WOOD", "FISH", "COAL", "IORE", "STON", "CLAY",
+        "OIL_", "GAS_", "CORE", "SAND", "BAUX", "TIO_", "GORE", "SORE",
+        "REOR", "COKE", "STEL", "COPP", "GLAS", "CERA", "ALUM", "TITN",
+        "GOLD", "SILV", "REMT", "LIME", "CEMT", "FOOD", "LUMB", "PETR",
+        "MACH", "CHEM", "MNFG", "ELEC", "ADVG", "HARD", "INDE", "CNST",
+        "AGRI", "TECH", "FUEL", "PASS", "PERS", "MAIL",
+    ])
+}
+
 FRAGMENTS = (
     "cargoes.nml",
     "graphics.nml",
@@ -39,18 +52,41 @@ FRAGMENTS = (
 )
 
 
-def prepare_fragment(filename: str, text: str) -> str:
-    """Return NML-safe source for the assembled entry point.
+def reconcile_cargo_slots(text: str) -> str:
+    """Make every cargo item's local slot match the canonical cargo table.
 
-    cargoes.nml currently contains an unused C-style macro template. NML 0.9
-    does not accept that preprocessor syntax, so keep the template in the
-    modular source but exclude the unused template from the generated entry
-    point. No cargo definitions or economic data are changed here.
+    In NML the FEAT_CARGOS item ID is the cargo type slot. The canonical
+    cargotable therefore determines the slot; an independently allocated
+    custom item ID is invalid even when it is >= 12. This normalization keeps
+    the generated entry point internally consistent with the authoritative
+    46-label table while the modular source is migrated incrementally.
     """
+    pattern = re.compile(
+        r'(item\(FEAT_CARGOS,\s*[^,]+,\s*)\d+(\)\s*\{\s*property\s*\{\s*\n\s*number:\s*)\d+(;\s*\n\s*cargo_label:\s*\")([A-Z0-9_]{4})(\";)'
+    )
+
+    def replace(match: re.Match[str]) -> str:
+        label = match.group(4)
+        if label not in CANONICAL_SLOTS:
+            raise ValueError(f"cargo label missing from canonical table: {label}")
+        slot = CANONICAL_SLOTS[label]
+        if slot < 12:
+            raise ValueError(
+                f"custom FEAT_CARGOS item attempts to define built-in slot {slot}: {label}"
+            )
+        return f"{match.group(1)}{slot}{match.group(2)}{slot}{match.group(3)}{label}{match.group(5)}"
+
+    return pattern.sub(replace, text)
+
+
+def prepare_fragment(filename: str, text: str) -> str:
+    """Return NML-safe source for the assembled entry point."""
     if filename == "cargoes.nml" and text.startswith("// Core Economy canonical cargo definitions."):
         marker = "// Primary extraction and resource cargos."
         if marker in text and "#define CARGO_DEFAULT_PROPERTIES" in text:
             text = text[text.index(marker):]
+    if filename == "cargoes.nml":
+        text = reconcile_cargo_slots(text)
     return text
 
 
