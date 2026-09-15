@@ -32,18 +32,18 @@ def load_json(name: str):
 
 
 def validate_cargo_adapter(entrypoint_nml: str) -> None:
-    """Validate the compiled-input cargo slot mapping.
+    """Validate the cargo translation table and actual OpenTTD cargo slots.
 
-    FEAT_CARGOS item IDs are cargo type slots. They must therefore match the
-    canonical cargotable position. Built-in cargo labels occupy their original
-    OpenTTD slots and are not redefined by the GRF.
+    The cargotable is the stable label mapping. FEAT_CARGOS item IDs are
+    actual OpenTTD cargo type slots: default cargos occupy slots 0-11 and
+    custom cargos must occupy slots 12-63. The two concepts must not be
+    conflated.
     """
     table_match = re.search(r"cargotable\s*\{(.*?)\}", entrypoint_nml, re.DOTALL)
     assert table_match, "canonical cargotable missing from generated entrypoint"
     table_labels = re.findall(r"\b[A-Z][A-Z0-9_]{3}\b", table_match.group(1))
     assert table_labels == CANONICAL_LABELS, "canonical cargotable order/content drifted"
 
-    expected_slots = {label: slot for slot, label in enumerate(CANONICAL_LABELS)}
     item_pattern = re.compile(
         r"item\(FEAT_CARGOS,\s*cargo_([a-z0-9_]+),\s*(\d+)\)\s*\{\s*"
         r"property\s*\{(.*?)\}\s*\}",
@@ -63,10 +63,6 @@ def validate_cargo_adapter(entrypoint_nml: str) -> None:
         number = int(number_match.group(1))
         label = label_match.group(1)
 
-        assert item_id == expected_slots[label], (
-            f"cargo {label} item ID {item_id} does not match canonical slot "
-            f"{expected_slots[label]}"
-        )
         assert number == item_id, f"custom cargo {label} number {number} != item ID {item_id}"
         assert item_id >= 12, f"custom cargo {label} illegally occupies original slot {item_id}"
         assert item_id < 64, f"custom cargo {label} exceeds OpenTTD cargo slot limit"
@@ -109,8 +105,6 @@ def main() -> int:
 
     validate_cargo_adapter(entrypoint_nml)
 
-    # Match the actual production expressions, not merely cargo-label presence.
-    # These are the canonical 1:1 recipes in recipes.json.
     assert (
         'COAL: incoming_cargo_waiting("COAL");' in production_nml
         and 'COKE: incoming_cargo_waiting("COAL");' in production_nml
@@ -126,7 +120,7 @@ def main() -> int:
         assert token in industries_nml, f"industry adapter missing: {token}"
 
     print("PLAYABLE CHAIN VALIDATION: PASS")
-    print("cargo adapter: canonical translation table + canonical custom slots")
+    print("cargo adapter: canonical translation table + OpenTTD-safe custom slots")
     print("canonical chain: coal -> coke; iron_ore + coke -> steel")
     print("industries: MIN_COAL_EARLY, MIN_IRON, PRC_COKE, PRC_STEEL")
     return 0
