@@ -13,6 +13,11 @@ DATA = ROOT / "data" / "reference-economy"
 # These cargoes are transport flows/endpoints, not industrial products.
 FLOW_CARGOES = {"passengers", "personnel", "mail"}
 
+# These cargoes terminate in settlement/market demand rather than another
+# industrial processor. They are legitimate graph sinks, so they are not
+# expected to appear as hard inputs on another industry.
+FINAL_CONSUMER_CARGOES = {"food", "manufactured_goods", "advanced_goods"}
+
 # These are expected to originate at extraction industries rather than recipes.
 PRIMARY_CARGOES = {
     "grain", "livestock", "timber", "fish", "coal", "iron_ore", "stone",
@@ -39,6 +44,11 @@ def main():
 
     if not FLOW_CARGOES <= cargoes:
         errors.append(f"flow cargoes missing from manifest: {sorted(FLOW_CARGOES - cargoes)}")
+
+    if not FINAL_CONSUMER_CARGOES <= cargoes:
+        errors.append(
+            f"final consumer cargoes missing from manifest: {sorted(FINAL_CONSUMER_CARGOES - cargoes)}"
+        )
 
     by_id = {i["id"]: i for i in industries}
     recipe_by_id = {r["id"]: r for r in recipes}
@@ -99,9 +109,6 @@ def main():
                 if recipe_inputs <= accepted:
                     compatible = True
                     break
-                # Alternative groups are represented on the industry record as
-                # mutually substitutable feedstocks. A one-input recipe may match
-                # one member of such a group.
                 groups = {}
                 for item in ind.get("hard_inputs", []):
                     if item.get("relationship") == "alternative":
@@ -114,9 +121,10 @@ def main():
                     f"recipe {recipe['id']}: no producer of {output} accepts the recipe's complete input set"
                 )
 
-    # Detect non-flow cargoes with no downstream use. A primary resource with no
-    # sink is still a graph defect; an endpoint-flow cargo is exempt.
-    for cargo in sorted(cargoes - FLOW_CARGOES):
+    # Detect non-flow cargoes with no downstream use. Primary/intermediate
+    # materials must feed another industrial or operational path; final consumer
+    # cargoes terminate in settlement/market demand and are explicit exceptions.
+    for cargo in sorted(cargoes - FLOW_CARGOES - FINAL_CONSUMER_CARGOES):
         if cargo not in consumers and cargo not in operational_consumers:
             errors.append(f"cargo has no downstream consumer or operational use: {cargo}")
 
@@ -127,8 +135,6 @@ def main():
             if role not in {"logistics", "service"}:
                 errors.append(f"flow cargo {cargo} is produced by non-flow industry {iid}")
 
-    # Succession families must preserve at least one cargo role unless an explicit
-    # endpoint transform exists. This catches accidental graph discontinuities.
     terminal_ids = set(endpoints.get("terminal_industries", {}))
     for iid, ind in by_id.items():
         successor = ind.get("successor")
@@ -153,6 +159,7 @@ def main():
     print(f"recipes: {len(recipe_ids)}")
     print(f"industries: {len(industry_ids)}")
     print(f"flow cargoes: {sorted(FLOW_CARGOES)}")
+    print(f"final consumer cargoes: {sorted(FINAL_CONSUMER_CARGOES)}")
     return 0
 
 
