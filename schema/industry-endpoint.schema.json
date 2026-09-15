@@ -16,7 +16,6 @@
     "endpoint_semantics": {"type": "string"},
     "terminal_industries": {
       "type": "object",
-      "additionalProperties": false,
       "additionalProperties": {
         "type": "object",
         "required": ["action", "coverage_end"],
