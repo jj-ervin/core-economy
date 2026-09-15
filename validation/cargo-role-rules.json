@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://github.com/jj-ervin/open-ttd/validation/cargo-role-rules.json",
+  "$id": "https://github.com/jj-ervin/core-economy/validation/cargo-role-rules.json",
   "title": "Cargo Role Validation Rules",
   "description": "Semantic validation rules for cargo identities that may hold more than one economic role.",
   "rules": [
