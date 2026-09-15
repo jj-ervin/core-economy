@@ -13,7 +13,7 @@
     "MIN_IRON": "transforming", "MIN_IRON_MECH": "persistent", "MIN_COPPER": "transforming", "MIN_COPPER_AUTO": "persistent",
     "MIN_QUARRY": "persistent", "MIN_CLAY": "persistent", "MIN_BAUXITE": "persistent", "MIN_TITANIUM": "persistent", "MIN_GOLD": "persistent", "MIN_SILVER": "persistent", "MIN_RARE_EARTH": "persistent", "MIN_OIL_ON": "declining", "MIN_GAS_ON": "declining",
     "PRC_COKE": "persistent", "PRC_STEEL": "transforming", "PRC_STEEL_ADV": "persistent", "PRC_COPPER": "transforming", "PRC_COPPER_ADV": "persistent",
-    "PRC_GLASS": "persistent", "PRC_CERAMICS": "persistent", "PRC_ALUMINUM": "persistent", "PRC_TITANIUM": "persistent", "PRC_PRECIOUS_METALS": "persistent", "PRC_RARE_EARTH": "persistent", "PRC_CEMENT": "persistent",
+    "PRC_GLASS": "persistent", "PRC_CERAMICS": "persistent", "PRC_ALUMINUM": "persistent", "PRC_TITANIUM": "persistent", "PRC_PRECIOUS_METALS": "persistent", "PRC_RARE_EARTH": "persistent", "PRC_LIME": "persistent", "PRC_CEMENT": "persistent",
     "PRC_FOOD": "transforming", "PRC_FOOD_ADV": "persistent", "PRC_SAWMILL": "transforming", "PRC_SAWMILL_AUTO": "persistent",
     "PRC_REFINERY": "declining", "PRC_REFINERY_ADV": "transforming", "PRC_CHEM": "transforming", "PRC_CHEM_ADV": "persistent",
     "MFG_MACH": "transforming", "MFG_MACH_ADV": "persistent", "MFG_FACTORY": "transforming", "MFG_FACTORY_ADV": "persistent",
