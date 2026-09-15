@@ -97,19 +97,33 @@ Iron Mine (1700) ────> Iron Ore ─────────────�
    - **Linux:** `~/.local/share/openttd/newgrf/` or `~/.openttd/newgrf/`
    - **macOS:** `~/Documents/OpenTTD/newgrf/`
 
-### Option B: Build from Source
+### Option B: Build Locally from Source
 
 Requirements: Python 3 and the NML compiler (`nmlc`).
 
 ```bash
-# Install NML compiler
+# Install NML compiler once
 pip install nml
 
-# Validate economy contract schema
+# Validate the canonical economy contract
 python tools/validate_economy.py
 
-# Compile NewGRF
-nmlc -o games/openttd/newgrf/core_economy.grf --lang=games/openttd/newgrf/lang games/openttd/newgrf/core_economy.nml
+# Assemble the modular NML and compile a local GRF
+python tools/build_newgrf.py --compile
+```
+
+The local build produces:
+
+```text
+build/core_economy.grf
+```
+
+Copy that file to your OpenTTD `newgrf` directory and test it locally. **GitHub Actions is CI verification and release automation; it is not required to build or test the NewGRF.**
+
+If you only want to regenerate the NML entry point without compiling:
+
+```bash
+python tools/build_newgrf.py
 ```
 
 ---
@@ -134,7 +148,7 @@ data/reference-economy/   # Canonical economy contracts (JSON)
 data/implementation-manifest.json # What is actually implemented/shipped
 schema/                   # JSON schemas for cargoes, industries, recipes
 validation/               # Validation rules and constraints
-tools/                    # Contract validators (validate_economy.py)
+tools/                    # Contract validators and local build tooling
 games/openttd/newgrf/     # NML source code and OpenTTD mapping docs
 docs/architecture-v0.4.1.md # Runtime boundaries, era model, and design rules
 .github/workflows/        # CI/CD and release automation workflows
