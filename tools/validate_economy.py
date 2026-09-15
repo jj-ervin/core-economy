@@ -163,9 +163,18 @@ def main():
     terminal_ids = set(endpoints.get("terminal_industries", {}))
     if terminal_ids - industry_ids:
         errors.append(f"endpoint contract contains unknown industries: {sorted(terminal_ids - industry_ids)}")
-    for iid, action in endpoints.get("terminal_industries", {}).items():
+    if industry_ids and not terminal_ids:
+        errors.append("endpoint contract contains no terminal industries")
+    for iid, spec in endpoints.get("terminal_industries", {}).items():
+        if not isinstance(spec, dict):
+            errors.append(f"endpoint {iid}: endpoint spec must be an object")
+            continue
+        action = spec.get("action")
+        coverage_end = spec.get("coverage_end")
         if action not in VALID_ENDPOINT_ACTIONS:
             errors.append(f"endpoint {iid}: invalid action {action}")
+        if coverage_end != horizon_end:
+            errors.append(f"endpoint {iid}: coverage_end must be {horizon_end}, found {coverage_end}")
 
     for iid, ind in by_id.items():
         seen_chain = set()
@@ -180,13 +189,17 @@ def main():
             if current not in terminal_ids:
                 errors.append(f"industry {iid}: succession chain terminates at {current}, which lacks a 2299 endpoint contract")
 
-    # Endpoint records must actually cover the full campaign horizon.
-    for iid in terminal_ids:
+    # The endpoint contract is authoritative campaign-horizon coverage. A legacy
+    # industry record may have an earlier era end, but its terminal family must
+    # explicitly declare coverage through the campaign horizon.
+    for iid, spec in endpoints.get("terminal_industries", {}).items():
         ind = by_id.get(iid)
         if not ind:
             continue
-        if ind.get("era", {}).get("end") != horizon_end:
-            errors.append(f"industry {iid}: endpoint contract requires era end {horizon_end}, found {ind.get('era', {}).get('end')}")
+        coverage_end = spec.get("coverage_end")
+        record_end = ind.get("era", {}).get("end")
+        if record_end is None or record_end > coverage_end:
+            errors.append(f"industry {iid}: record era end {record_end} exceeds endpoint coverage {coverage_end}")
 
     # Every recipe output must have an industry producer. For processed outputs,
     # at least one producer must also accept one of the recipe's actual inputs.
