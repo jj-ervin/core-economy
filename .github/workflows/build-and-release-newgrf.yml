@@ -30,11 +30,11 @@ jobs:
       - name: Validate Core Economy contract
         run: python tools/validate_economy.py
 
-      - name: Validate playable core chain
-        run: python tools/validate_playable_chain.py
-
       - name: Assemble modular NML entry point
         run: python tools/build_newgrf.py
+
+      - name: Validate playable core chain
+        run: python tools/validate_playable_chain.py
 
       - name: Compile OpenTTD NewGRF
         run: |
