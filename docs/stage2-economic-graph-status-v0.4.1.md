@@ -3,44 +3,38 @@
 ## Current status
 
 **Stage 2 audit: complete.**  
-**Stage 2 canonical graph: not yet complete.**  
-**Stage 3 NML expansion: blocked until graph validation passes.**
+**Canonical graph repair: substantially complete, validation gate still open.**  
+**Stage 3 NML expansion: remains blocked pending passing validation.**
 
-## Completed in this branch
+## Repairs completed
 
-- Completed canonical cargo/industry/recipe/endpoint/lifecycle inspection.
-- Recorded the full Stage 2 economic graph audit in `docs/stage2-economic-graph-audit-v0.4.1.md`.
-- Corrected `steel_lumber_machinery_to_advanced_goods` so it produces `advanced_goods` rather than `manufactured_goods`.
-- Added `tools/validate_economic_graph.py` for producer/consumer/source/sink, flow-cargo, recipe compatibility, and succession-flow checks.
-- Added the graph validator to the economy CI workflow.
+- Corrected `steel_lumber_machinery_to_advanced_goods` to produce `advanced_goods`.
+- Added canonical extraction coverage for Bauxite, Titanium Ore, Gold Ore, Silver Ore, and Rare Earth Ore.
+- Extended the existing Quarry to produce Sand as a defensible co-output, avoiding a redundant new extraction system.
+- Added the documented Cement transformation: Stone + Clay + Sand -> Cement.
+- Connected Cement into Construction Materials production.
+- Normalized `FIN_SYSTEM` to the canonical `financial_services` sector and converted it to a service endpoint/sink rather than an industrial producer of Advanced Goods.
+- Removed synthetic passenger production from passenger-port and offshore-supply logistics industries.
 
-## Remaining canonical repairs
+## Still unresolved
 
-### Unambiguous graph defects
-
-- Add missing primary extraction sources for Sand, Bauxite, Titanium Ore, Gold Ore, Silver Ore, and Rare Earth Ore.
-- Complete the documented Stone/Clay/Sand -> Lime/Cement -> Construction Materials chain.
-- Normalize `FIN_SYSTEM` to the canonical sector vocabulary.
-- Remove synthetic passenger production from logistics industries and preserve passengers as a transport/endpoint flow.
-
-### Semantics requiring explicit reconciliation
-
-- Precious Metals Works currently describes alternative Gold/Silver feedstock while outputting both products. The graph needs explicit co-product or separate-process semantics.
-- Chemical Works has alternative Petroleum Products/Gas feedstock semantics while recipes are represented as separate explicit paths. The validator now needs to treat these as alternative production paths rather than requiring both inputs.
-- Aluminum, Titanium, Gold, Silver, and Advanced Goods need explicit downstream economic roles where current records are only weakly connected.
+1. Precious Metals Works still exposes Gold/Silver as alternative feedstock while declaring both outputs. The economic model needs an explicit co-product or separate-process decision before this is considered fully reconciled.
+2. The advanced/legacy downstream economic role of Aluminum and Titanium remains weak and should be resolved only from existing canonical intent, not invented gameplay.
+3. Chemical Works alternative semantics need final validator confirmation across all recipes and eras.
+4. Era IV (2150–2299) remains an endpoint/lifecycle contract issue rather than a new graph subsystem; many variants terminate at 2150 and need the existing lifecycle/endpoint rules checked for full continuity.
 
 ## Explicitly deferred
 
-Electricity/Power, textiles, geography, depletion, settlements, modernization, GameScript/Dynamics, Sidecar/Admin, and future carbon-material branches beyond the locked Coke decision remain outside this repair pass.
+Electricity/Power, textiles, geography, depletion, settlements, modernization, GameScript/Dynamics, Sidecar/Admin, and future carbon-material branches beyond the locked Coke decision remain outside Stage 2 repair.
 
-## Exit gate
+## Validation gate
 
-Stage 3 is permitted only after:
+Before Stage 3:
 
-1. all missing primary sources have canonical industry definitions;
-2. the construction chain is connected;
-3. financial/precious-metal semantics are resolved;
-4. passenger flow handling is no longer modeled as synthetic industrial production;
-5. graph validation passes for all four eras;
-6. the existing contract validator still passes;
-7. no new scope or runtime subsystem has been introduced.
+- existing contract validator must pass;
+- graph validator must pass;
+- all four eras must have source-to-sink reachability for active economic chains;
+- no orphan cargoes or industries may remain unless explicitly classified as endpoint/flow/deferred;
+- alternative-input semantics must agree between industry definitions and recipes;
+- successor flow continuity must pass;
+- no unrelated cleanup or architecture expansion is permitted.
