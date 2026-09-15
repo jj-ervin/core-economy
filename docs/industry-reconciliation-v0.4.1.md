@@ -49,6 +49,14 @@ Early → Mechanized → Modern is a useful technology progression. Coal should 
 
 **Disposition:** persistent resource sector; transforming then declining variants.
 
+### Coke
+
+Coke remains an important industrial carbon material, especially for blast-furnace steelmaking, foundries, and other metallurgical processes. It should not be treated as a temporary bridge that disappears when advanced steelmaking becomes available. Later technologies may reduce or redirect demand, but the Coke Works industry remains available and can serve changing customers.
+
+The future carbon-materials direction is additive rather than magical: coal, gas, biomass, and recycled carbon may feed distinct processing branches for metallurgical coke, foundry coke, industrial carbon, graphite, carbon fiber, graphene, and—much later—synthetic diamond. Synthetic diamond must be its own technology-gated process, not a direct `coal → diamond` recipe.
+
+**Disposition:** persistent sector; transforming variants. Do **not** mark Coke Works as `phase_out` in the current reconciliation.
+
 ### Iron
 
 Iron Mine → Mechanized Iron Mine currently ends at 2150. Iron extraction should remain available after 2150 unless the future scenario deliberately replaces primary extraction with recycling/alternative materials.
@@ -66,12 +74,6 @@ These are correctly modeled as continuous foundational construction/material res
 Oil and gas are currently marked continuous to 2150. Their future role should be modeled as declining/transforming rather than an unexplained hard stop. They may remain as feedstocks even if energy demand falls.
 
 **Disposition:** persistent-to-declining energy/feedstock sectors; future role requires explicit era treatment.
-
-### Coke
-
-Coke is an excellent example of a potentially phase-out industrial process rather than a permanent sector. It should remain important while coke-based steelmaking is important, then decline as steelmaking transitions to electric/recycled/alternative processes.
-
-**Disposition:** transforming/declining; possible phase-out late in the campaign.
 
 ### Steel
 
@@ -113,11 +115,12 @@ Construction must be treated as a permanent economic sink across the campaign. T
 
 These require explicit justification before being marked `phase_out`:
 
-- coke production, eventually
 - coal-fired power generation, if modeled as a distinct industry
 - legacy petroleum refining, potentially, while preserving petrochemical feedstock roles
 - historically obsolete transport/production technologies if they are represented as industries
 - other genuinely obsolete sectors only after a documented successor exists
+
+Coke production is **not** a current phase-out candidate. Its role may transform and its demand may decline in some steelmaking pathways, but Coke Works remains persistent in the economic model.
 
 ## Reconciliation rule for 2150–2299
 
