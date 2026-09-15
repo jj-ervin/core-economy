@@ -6,16 +6,11 @@ import sys
 ROOT = Path(__file__).resolve().parents[1]
 DATA = ROOT / "data" / "reference-economy"
 
-EXPECTED_SECTORS = {
-    "energy", "materials", "industrials", "consumer_discretionary",
-    "consumer_staples", "health_care", "financials",
-    "information_technology", "communication_services", "utilities",
-    "real_estate",
-}
-
 VALID_RELATIONSHIPS = {"required", "proportional", "preferred", "alternative", "optional", "supply"}
 VALID_EFFECTS = {"productivity", "capacity", "reliability", "efficiency"}
 VALID_ROLES = {"extraction", "processing", "manufacturing", "supply_production", "service", "logistics"}
+VALID_ECONOMIC_LIFECYCLES = {"persistent", "transforming", "emerging", "declining", "phase_out"}
+VALID_ENDPOINT_ACTIONS = {"continue", "transform", "decline", "phase_out"}
 
 
 def load(name):
@@ -29,32 +24,32 @@ def main():
     materials = load("materials.json")
     industries = load("industries.json")
     modules = load("modules.json")
+    lifecycle = load("industry-lifecycle.json")
+    endpoints = load("industry-endpoints.json")
     errors = []
 
     cargoes = set(economy["cargoes"])
     recipe_ids = set(economy["recipes"])
     industry_ids = set(economy["industries"])
     module_ids = set(economy["modules"])
-    sectors = economy["sectors"]
+    sectors = set(economy["sectors"])
     eras = economy["eras"]
+    horizon = lifecycle.get("horizon", {})
+    horizon_start = horizon.get("start")
+    horizon_end = horizon.get("end")
 
-    if economy.get("version") != "0.4.0":
-        errors.append(f"expected economy version 0.4.0, found {economy.get('version')}")
-    if len(sectors) != 11:
-        errors.append(f"expected 11 sectors, found {len(sectors)}")
-    if len(set(sectors)) != len(sectors):
+    if economy.get("version") != "0.4.1":
+        errors.append(f"expected economy version 0.4.1, found {economy.get('version')}")
+    if len(sectors) != len(economy["sectors"]):
         errors.append("duplicate sectors in economy manifest")
-    if set(sectors) != EXPECTED_SECTORS:
-        errors.append(f"sector taxonomy mismatch: expected {sorted(EXPECTED_SECTORS)}, found {sorted(set(sectors))}")
-
-    era_ids = set()
-    for era in eras:
-        eid = era.get("id")
-        if not eid or eid in era_ids:
-            errors.append(f"duplicate/missing era id: {eid}")
-        era_ids.add(eid)
-        if era.get("start") is None or era.get("end") is None or era["start"] > era["end"]:
-            errors.append(f"invalid era bounds: {eid}")
+    if len(eras) != 4:
+        errors.append(f"expected 4 eras, found {len(eras)}")
+    expected_bounds = [(1700, 1849), (1850, 1999), (2000, 2149), (2150, 2299)]
+    actual_bounds = [(e.get("start"), e.get("end")) for e in eras]
+    if actual_bounds != expected_bounds:
+        errors.append(f"era bounds mismatch: expected {expected_bounds}, found {actual_bounds}")
+    if (horizon_start, horizon_end) != (1700, 2299):
+        errors.append(f"lifecycle horizon must be 1700-2299, found {horizon_start}-{horizon_end}")
 
     material_ids = {x["id"] for x in materials}
     if material_ids - cargoes:
@@ -107,11 +102,13 @@ def main():
 
     seen_industries = set()
     outputs_by_industry = {}
+    by_id = {}
     for ind in industries:
         iid = ind.get("id")
         if not iid or iid in seen_industries:
             errors.append(f"duplicate/missing industry: {iid}")
         seen_industries.add(iid)
+        by_id[iid] = ind
         if iid not in industry_ids:
             errors.append(f"industry not declared in manifest: {iid}")
         role = ind.get("role")
@@ -152,6 +149,45 @@ def main():
     if industry_ids - seen_industries:
         errors.append(f"manifest industries missing definitions: {sorted(industry_ids - seen_industries)}")
 
+    # The separate economic lifecycle map must cover exactly the manifest IDs.
+    lifecycle_ids = set(lifecycle.get("industries", {}))
+    if lifecycle_ids - industry_ids:
+        errors.append(f"lifecycle map contains unknown industries: {sorted(lifecycle_ids - industry_ids)}")
+    if industry_ids - lifecycle_ids:
+        errors.append(f"lifecycle map missing industries: {sorted(industry_ids - lifecycle_ids)}")
+    for iid, value in lifecycle.get("industries", {}).items():
+        if value not in VALID_ECONOMIC_LIFECYCLES:
+            errors.append(f"industry {iid}: invalid economic lifecycle {value}")
+
+    # Every succession chain must terminate in an explicit 2299 endpoint contract.
+    terminal_ids = set(endpoints.get("terminal_industries", {}))
+    if terminal_ids - industry_ids:
+        errors.append(f"endpoint contract contains unknown industries: {sorted(terminal_ids - industry_ids)}")
+    for iid, action in endpoints.get("terminal_industries", {}).items():
+        if action not in VALID_ENDPOINT_ACTIONS:
+            errors.append(f"endpoint {iid}: invalid action {action}")
+
+    for iid, ind in by_id.items():
+        seen_chain = set()
+        current = iid
+        while by_id.get(current, {}).get("successor"):
+            if current in seen_chain:
+                errors.append(f"industry {iid}: successor cycle detected at {current}")
+                break
+            seen_chain.add(current)
+            current = by_id[current]["successor"]
+        else:
+            if current not in terminal_ids:
+                errors.append(f"industry {iid}: succession chain terminates at {current}, which lacks a 2299 endpoint contract")
+
+    # Endpoint records must actually cover the full campaign horizon.
+    for iid in terminal_ids:
+        ind = by_id.get(iid)
+        if not ind:
+            continue
+        if ind.get("era", {}).get("end") != horizon_end:
+            errors.append(f"industry {iid}: endpoint contract requires era end {horizon_end}, found {ind.get('era', {}).get('end')}")
+
     # Every recipe output must have an industry producer. For processed outputs,
     # at least one producer must also accept one of the recipe's actual inputs.
     for rid in recipe_ids:
@@ -170,7 +206,6 @@ def main():
             errors.append(f"recipe {rid}: no producing industry accepts a recipe input")
 
     # Succession links must be reciprocal where both sides declare the relationship.
-    by_id = {i["id"]: i for i in industries}
     for ind in industries:
         iid = ind["id"]
         succ = ind.get("successor")
@@ -182,7 +217,17 @@ def main():
         if ind.get("lifecycle") == "successor" and not (succ or pred):
             errors.append(f"industry {iid}: successor lifecycle has no succession link")
 
-    # Reference economy must declare every manifest object exactly once.
+    # Guard the explicit carbon-materials decision: Coke is persistent and is not
+    # allowed to be replaced by a fictional direct coal -> synthetic-diamond chain.
+    if lifecycle.get("industries", {}).get("PRC_COKE") != "persistent":
+        errors.append("PRC_COKE must remain economic_lifecycle=persistent")
+    forbidden_direct_diamond = {"coal", "coke"}
+    for recipe in recipes:
+        if recipe.get("output") in {"synthetic_diamond", "diamond"}:
+            inputs = {x.get("cargo") for x in recipe.get("inputs", [])}
+            if inputs & forbidden_direct_diamond:
+                errors.append(f"recipe {recipe.get('id')}: direct coal/coke to diamond is forbidden")
+
     if len(industry_ids) != len(economy["industries"]):
         errors.append("duplicate industry ids in economy manifest")
     if len(recipe_ids) != len(economy["recipes"]):
@@ -204,6 +249,7 @@ def main():
     print(f"industries: {len(industries)}")
     print(f"modules: {len(modules)}")
     print(f"sectors: {len(sectors)}")
+    print(f"horizon: {horizon_start}-{horizon_end}")
     return 0
 
 
