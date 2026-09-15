@@ -16,7 +16,16 @@
     "endpoint_semantics": {"type": "string"},
     "terminal_industries": {
       "type": "object",
-      "additionalProperties": {"enum": ["continue", "transform", "decline", "phase_out"]}
+      "additionalProperties": false,
+      "additionalProperties": {
+        "type": "object",
+        "required": ["action", "coverage_end"],
+        "additionalProperties": false,
+        "properties": {
+          "action": {"enum": ["continue", "transform", "decline", "phase_out"]},
+          "coverage_end": {"type": "integer"}
+        }
+      }
     }
   }
 }
