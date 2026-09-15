@@ -40,7 +40,10 @@ item(FEAT_INDUSTRIES, ind_coke_works) {
         name: string(STR_IND_COKE_WORKS);
         nearby_station_name: string(STR_STATION_COKE_WORKS);
         fund_cost_multiplier: 150;
-        cargo_types: [accept_cargo("COAL", produce_cargo("COKE", 0))];
+        cargo_types: [
+            accept_cargo("COAL"),
+            produce_cargo("COKE", 0)
+        ];
         prob_in_game: 4;
         prob_random: 4;
         prospect_chance: 0;
@@ -62,8 +65,9 @@ item(FEAT_INDUSTRIES, ind_steel_mill) {
         nearby_station_name: string(STR_STATION_STEEL_MILL);
         fund_cost_multiplier: 180;
         cargo_types: [
-            accept_cargo("IORE", produce_cargo("STEL", 0)),
-            accept_cargo("COKE", produce_cargo("STEL", 0))
+            accept_cargo("IORE"),
+            accept_cargo("COKE"),
+            produce_cargo("STEL", 0)
         ];
         prob_in_game: 4;
         prob_random: 4;

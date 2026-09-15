@@ -1,23 +1,491 @@
-// Core Economy Cargo Definitions (Vertical Slice v0.4.0)
-// Note: COAL, IORE, and STEL are standard OpenTTD built-in cargoes declared in cargotable.
-// Only custom cargoes (COKE) require explicit FEAT_CARGOS item definitions.
+// Core Economy canonical cargo adapter.
+//
+// Stage 2 cargoes.json is authoritative for the economic model. This file
+// maps every canonical cargo to an OpenTTD cargo label. OpenTTD's original
+// cargo slots 0-11 are never redefined here. Labels that exist in OpenTTD
+// with matching semantics are reused through the canonical cargotable.
+//
+// Custom cargoes use slots 12+ and explicitly set number == item ID.
 
-item(FEAT_CARGOS, cargo_coke, 2) {
+// Built-in OpenTTD cargo labels reused by Core Economy:
+// GRAI, LVST, WOOD, COAL, IORE, OIL_, CORE, STEL, GOLD, FOOD, PASS, MAIL.
+//
+// Custom cargo slot allocation is deliberately independent of canonical
+// translation-table order. The translation table is the stable label map;
+// custom item IDs are local cargo slots and must remain >= 12.
+
+item(FEAT_CARGOS, cargo_fish, 12) {
     property {
+        number: 12;
+        cargo_label: "FISH";
+        type_name: string(STR_CARGO_NAME_FISH);
+        unit_name: string(STR_CARGO_UNIT_FISH);
+        type_abbreviation: string(STR_CARGO_ABBREV_FISH);
+        weight: 1.0;
+        is_freight: 1;
+        cargo_classes: bitmask(CC_REFRIGERATED);
+        town_growth_effect: TOWNGROWTH_NONE;
+    }
+}
+
+item(FEAT_CARGOS, cargo_stone, 13) {
+    property {
+        number: 13;
+        cargo_label: "STON";
+        type_name: string(STR_CARGO_NAME_STONE);
+        unit_name: string(STR_CARGO_UNIT_STONE);
+        type_abbreviation: string(STR_CARGO_ABBREV_STONE);
+        weight: 1.0;
+        is_freight: 1;
+        cargo_classes: bitmask(CC_BULK);
+        town_growth_effect: TOWNGROWTH_NONE;
+    }
+}
+
+item(FEAT_CARGOS, cargo_clay, 14) {
+    property {
+        number: 14;
+        cargo_label: "CLAY";
+        type_name: string(STR_CARGO_NAME_CLAY);
+        unit_name: string(STR_CARGO_UNIT_CLAY);
+        type_abbreviation: string(STR_CARGO_ABBREV_CLAY);
+        weight: 1.0;
+        is_freight: 1;
+        cargo_classes: bitmask(CC_BULK);
+        town_growth_effect: TOWNGROWTH_NONE;
+    }
+}
+
+item(FEAT_CARGOS, cargo_gas, 15) {
+    property {
+        number: 15;
+        cargo_label: "GAS_";
+        type_name: string(STR_CARGO_NAME_GAS);
+        unit_name: string(STR_CARGO_UNIT_GAS);
+        type_abbreviation: string(STR_CARGO_ABBREV_GAS);
+        weight: 1.0;
+        is_freight: 1;
+        cargo_classes: bitmask(CC_LIQUID);
+        town_growth_effect: TOWNGROWTH_NONE;
+    }
+}
+
+item(FEAT_CARGOS, cargo_sand, 16) {
+    property {
+        number: 16;
+        cargo_label: "SAND";
+        type_name: string(STR_CARGO_NAME_SAND);
+        unit_name: string(STR_CARGO_UNIT_SAND);
+        type_abbreviation: string(STR_CARGO_ABBREV_SAND);
+        weight: 1.0;
+        is_freight: 1;
+        cargo_classes: bitmask(CC_BULK);
+        town_growth_effect: TOWNGROWTH_NONE;
+    }
+}
+
+item(FEAT_CARGOS, cargo_bauxite, 17) {
+    property {
+        number: 17;
+        cargo_label: "BAUX";
+        type_name: string(STR_CARGO_NAME_BAUXITE);
+        unit_name: string(STR_CARGO_UNIT_BAUXITE);
+        type_abbreviation: string(STR_CARGO_ABBREV_BAUXITE);
+        weight: 1.0;
+        is_freight: 1;
+        cargo_classes: bitmask(CC_BULK);
+        town_growth_effect: TOWNGROWTH_NONE;
+    }
+}
+
+item(FEAT_CARGOS, cargo_titanium_ore, 18) {
+    property {
+        number: 18;
+        cargo_label: "TIO_";
+        type_name: string(STR_CARGO_NAME_TITANIUM_ORE);
+        unit_name: string(STR_CARGO_UNIT_TITANIUM_ORE);
+        type_abbreviation: string(STR_CARGO_ABBREV_TITANIUM_ORE);
+        weight: 1.0;
+        is_freight: 1;
+        cargo_classes: bitmask(CC_BULK);
+        town_growth_effect: TOWNGROWTH_NONE;
+    }
+}
+
+item(FEAT_CARGOS, cargo_gold_ore, 19) {
+    property {
+        number: 19;
+        cargo_label: "GORE";
+        type_name: string(STR_CARGO_NAME_GOLD_ORE);
+        unit_name: string(STR_CARGO_UNIT_GOLD_ORE);
+        type_abbreviation: string(STR_CARGO_ABBREV_GOLD_ORE);
+        weight: 1.0;
+        is_freight: 1;
+        cargo_classes: bitmask(CC_BULK);
+        town_growth_effect: TOWNGROWTH_NONE;
+    }
+}
+
+item(FEAT_CARGOS, cargo_silver_ore, 20) {
+    property {
+        number: 20;
+        cargo_label: "SORE";
+        type_name: string(STR_CARGO_NAME_SILVER_ORE);
+        unit_name: string(STR_CARGO_UNIT_SILVER_ORE);
+        type_abbreviation: string(STR_CARGO_ABBREV_SILVER_ORE);
+        weight: 1.0;
+        is_freight: 1;
+        cargo_classes: bitmask(CC_BULK);
+        town_growth_effect: TOWNGROWTH_NONE;
+    }
+}
+
+item(FEAT_CARGOS, cargo_rare_earth_ore, 21) {
+    property {
+        number: 21;
+        cargo_label: "REOR";
+        type_name: string(STR_CARGO_NAME_RARE_EARTH_ORE);
+        unit_name: string(STR_CARGO_UNIT_RARE_EARTH_ORE);
+        type_abbreviation: string(STR_CARGO_ABBREV_RARE_EARTH_ORE);
+        weight: 1.0;
+        is_freight: 1;
+        cargo_classes: bitmask(CC_BULK);
+        town_growth_effect: TOWNGROWTH_NONE;
+    }
+}
+
+item(FEAT_CARGOS, cargo_coke, 22) {
+    property {
+        number: 22;
         cargo_label: "COKE";
         type_name: string(STR_CARGO_NAME_COKE);
         unit_name: string(STR_CARGO_UNIT_COKE);
         type_abbreviation: string(STR_CARGO_ABBREV_COKE);
-        sprite: 4281;
         weight: 1.0;
-        penalty_lowerbound: 18;
-        single_penalty_length: 255;
-        price_factor: 120;
-        station_list_colour: 190;
-        cargo_payment_list_colour: 190;
         is_freight: 1;
         cargo_classes: bitmask(CC_BULK);
         town_growth_effect: TOWNGROWTH_NONE;
-        town_growth_multiplier: 1.0;
+    }
+}
+
+item(FEAT_CARGOS, cargo_copper, 23) {
+    property {
+        number: 23;
+        cargo_label: "COPP";
+        type_name: string(STR_CARGO_NAME_COPPER);
+        unit_name: string(STR_CARGO_UNIT_COPPER);
+        type_abbreviation: string(STR_CARGO_ABBREV_COPPER);
+        weight: 1.0;
+        is_freight: 1;
+        cargo_classes: bitmask(CC_PIECE_GOODS);
+        town_growth_effect: TOWNGROWTH_NONE;
+    }
+}
+
+item(FEAT_CARGOS, cargo_glass, 24) {
+    property {
+        number: 24;
+        cargo_label: "GLAS";
+        type_name: string(STR_CARGO_NAME_GLASS);
+        unit_name: string(STR_CARGO_UNIT_GLASS);
+        type_abbreviation: string(STR_CARGO_ABBREV_GLASS);
+        weight: 1.0;
+        is_freight: 1;
+        cargo_classes: bitmask(CC_PIECE_GOODS);
+        town_growth_effect: TOWNGROWTH_NONE;
+    }
+}
+
+item(FEAT_CARGOS, cargo_ceramics, 25) {
+    property {
+        number: 25;
+        cargo_label: "CERA";
+        type_name: string(STR_CARGO_NAME_CERAMICS);
+        unit_name: string(STR_CARGO_UNIT_CERAMICS);
+        type_abbreviation: string(STR_CARGO_ABBREV_CERAMICS);
+        weight: 1.0;
+        is_freight: 1;
+        cargo_classes: bitmask(CC_PIECE_GOODS);
+        town_growth_effect: TOWNGROWTH_NONE;
+    }
+}
+
+item(FEAT_CARGOS, cargo_aluminum, 26) {
+    property {
+        number: 26;
+        cargo_label: "ALUM";
+        type_name: string(STR_CARGO_NAME_ALUMINUM);
+        unit_name: string(STR_CARGO_UNIT_ALUMINUM);
+        type_abbreviation: string(STR_CARGO_ABBREV_ALUMINUM);
+        weight: 1.0;
+        is_freight: 1;
+        cargo_classes: bitmask(CC_PIECE_GOODS);
+        town_growth_effect: TOWNGROWTH_NONE;
+    }
+}
+
+item(FEAT_CARGOS, cargo_titanium, 27) {
+    property {
+        number: 27;
+        cargo_label: "TITN";
+        type_name: string(STR_CARGO_NAME_TITANIUM);
+        unit_name: string(STR_CARGO_UNIT_TITANIUM);
+        type_abbreviation: string(STR_CARGO_ABBREV_TITANIUM);
+        weight: 1.0;
+        is_freight: 1;
+        cargo_classes: bitmask(CC_PIECE_GOODS);
+        town_growth_effect: TOWNGROWTH_NONE;
+    }
+}
+
+item(FEAT_CARGOS, cargo_silver, 28) {
+    property {
+        number: 28;
+        cargo_label: "SILV";
+        type_name: string(STR_CARGO_NAME_SILVER);
+        unit_name: string(STR_CARGO_UNIT_SILVER);
+        type_abbreviation: string(STR_CARGO_ABBREV_SILVER);
+        weight: 1.0;
+        is_freight: 1;
+        cargo_classes: bitmask(CC_ARMOURED);
+        town_growth_effect: TOWNGROWTH_NONE;
+    }
+}
+
+item(FEAT_CARGOS, cargo_rare_earth_materials, 29) {
+    property {
+        number: 29;
+        cargo_label: "REMT";
+        type_name: string(STR_CARGO_NAME_RARE_EARTH_MATERIALS);
+        unit_name: string(STR_CARGO_UNIT_RARE_EARTH_MATERIALS);
+        type_abbreviation: string(STR_CARGO_ABBREV_RARE_EARTH_MATERIALS);
+        weight: 1.0;
+        is_freight: 1;
+        cargo_classes: bitmask(CC_PIECE_GOODS);
+        town_growth_effect: TOWNGROWTH_NONE;
+    }
+}
+
+item(FEAT_CARGOS, cargo_lime, 30) {
+    property {
+        number: 30;
+        cargo_label: "LIME";
+        type_name: string(STR_CARGO_NAME_LIME);
+        unit_name: string(STR_CARGO_UNIT_LIME);
+        type_abbreviation: string(STR_CARGO_ABBREV_LIME);
+        weight: 1.0;
+        is_freight: 1;
+        cargo_classes: bitmask(CC_POWDERIZED);
+        town_growth_effect: TOWNGROWTH_NONE;
+    }
+}
+
+item(FEAT_CARGOS, cargo_cement, 31) {
+    property {
+        number: 31;
+        cargo_label: "CEMT";
+        type_name: string(STR_CARGO_NAME_CEMENT);
+        unit_name: string(STR_CARGO_UNIT_CEMENT);
+        type_abbreviation: string(STR_CARGO_ABBREV_CEMENT);
+        weight: 1.0;
+        is_freight: 1;
+        cargo_classes: bitmask(CC_POWDERIZED);
+        town_growth_effect: TOWNGROWTH_NONE;
+    }
+}
+
+item(FEAT_CARGOS, cargo_lumber, 32) {
+    property {
+        number: 32;
+        cargo_label: "LUMB";
+        type_name: string(STR_CARGO_NAME_LUMBER);
+        unit_name: string(STR_CARGO_UNIT_LUMBER);
+        type_abbreviation: string(STR_CARGO_ABBREV_LUMBER);
+        weight: 1.0;
+        is_freight: 1;
+        cargo_classes: bitmask(CC_PIECE_GOODS);
+        town_growth_effect: TOWNGROWTH_NONE;
+    }
+}
+
+item(FEAT_CARGOS, cargo_petroleum_products, 33) {
+    property {
+        number: 33;
+        cargo_label: "PETR";
+        type_name: string(STR_CARGO_NAME_PETROLEUM_PRODUCTS);
+        unit_name: string(STR_CARGO_UNIT_PETROLEUM_PRODUCTS);
+        type_abbreviation: string(STR_CARGO_ABBREV_PETROLEUM_PRODUCTS);
+        weight: 1.0;
+        is_freight: 1;
+        cargo_classes: bitmask(CC_LIQUID);
+        town_growth_effect: TOWNGROWTH_NONE;
+    }
+}
+
+item(FEAT_CARGOS, cargo_machinery, 34) {
+    property {
+        number: 34;
+        cargo_label: "MACH";
+        type_name: string(STR_CARGO_NAME_MACHINERY);
+        unit_name: string(STR_CARGO_UNIT_MACHINERY);
+        type_abbreviation: string(STR_CARGO_ABBREV_MACHINERY);
+        weight: 1.0;
+        is_freight: 1;
+        cargo_classes: bitmask(CC_PIECE_GOODS);
+        town_growth_effect: TOWNGROWTH_NONE;
+    }
+}
+
+item(FEAT_CARGOS, cargo_chemicals, 35) {
+    property {
+        number: 35;
+        cargo_label: "CHEM";
+        type_name: string(STR_CARGO_NAME_CHEMICALS);
+        unit_name: string(STR_CARGO_UNIT_CHEMICALS);
+        type_abbreviation: string(STR_CARGO_ABBREV_CHEMICALS);
+        weight: 1.0;
+        is_freight: 1;
+        cargo_classes: bitmask(CC_HAZARDOUS);
+        town_growth_effect: TOWNGROWTH_NONE;
+    }
+}
+
+item(FEAT_CARGOS, cargo_manufactured_goods, 36) {
+    property {
+        number: 36;
+        cargo_label: "MNFG";
+        type_name: string(STR_CARGO_NAME_MANUFACTURED_GOODS);
+        unit_name: string(STR_CARGO_UNIT_MANUFACTURED_GOODS);
+        type_abbreviation: string(STR_CARGO_ABBREV_MANUFACTURED_GOODS);
+        weight: 1.0;
+        is_freight: 1;
+        cargo_classes: bitmask(CC_PIECE_GOODS);
+        town_growth_effect: TOWNGROWTH_NONE;
+    }
+}
+
+item(FEAT_CARGOS, cargo_electronics, 37) {
+    property {
+        number: 37;
+        cargo_label: "ELEC";
+        type_name: string(STR_CARGO_NAME_ELECTRONICS);
+        unit_name: string(STR_CARGO_UNIT_ELECTRONICS);
+        type_abbreviation: string(STR_CARGO_ABBREV_ELECTRONICS);
+        weight: 1.0;
+        is_freight: 1;
+        cargo_classes: bitmask(CC_PIECE_GOODS);
+        town_growth_effect: TOWNGROWTH_NONE;
+    }
+}
+
+item(FEAT_CARGOS, cargo_advanced_goods, 38) {
+    property {
+        number: 38;
+        cargo_label: "ADVG";
+        type_name: string(STR_CARGO_NAME_ADVANCED_GOODS);
+        unit_name: string(STR_CARGO_UNIT_ADVANCED_GOODS);
+        type_abbreviation: string(STR_CARGO_ABBREV_ADVANCED_GOODS);
+        weight: 1.0;
+        is_freight: 1;
+        cargo_classes: bitmask(CC_PIECE_GOODS);
+        town_growth_effect: TOWNGROWTH_NONE;
+    }
+}
+
+item(FEAT_CARGOS, cargo_tools_hardware, 39) {
+    property {
+        number: 39;
+        cargo_label: "HARD";
+        type_name: string(STR_CARGO_NAME_TOOLS_HARDWARE);
+        unit_name: string(STR_CARGO_UNIT_TOOLS_HARDWARE);
+        type_abbreviation: string(STR_CARGO_ABBREV_TOOLS_HARDWARE);
+        weight: 1.0;
+        is_freight: 1;
+        cargo_classes: bitmask(CC_PIECE_GOODS);
+        town_growth_effect: TOWNGROWTH_NONE;
+    }
+}
+
+item(FEAT_CARGOS, cargo_industrial_equipment, 40) {
+    property {
+        number: 40;
+        cargo_label: "INDE";
+        type_name: string(STR_CARGO_NAME_INDUSTRIAL_EQUIPMENT);
+        unit_name: string(STR_CARGO_UNIT_INDUSTRIAL_EQUIPMENT);
+        type_abbreviation: string(STR_CARGO_ABBREV_INDUSTRIAL_EQUIPMENT);
+        weight: 1.0;
+        is_freight: 1;
+        cargo_classes: bitmask(CC_PIECE_GOODS);
+        town_growth_effect: TOWNGROWTH_NONE;
+    }
+}
+
+item(FEAT_CARGOS, cargo_construction_materials, 41) {
+    property {
+        number: 41;
+        cargo_label: "CNST";
+        type_name: string(STR_CARGO_NAME_CONSTRUCTION_MATERIALS);
+        unit_name: string(STR_CARGO_UNIT_CONSTRUCTION_MATERIALS);
+        type_abbreviation: string(STR_CARGO_ABBREV_CONSTRUCTION_MATERIALS);
+        weight: 1.0;
+        is_freight: 1;
+        cargo_classes: bitmask(CC_PIECE_GOODS);
+        town_growth_effect: TOWNGROWTH_NONE;
+    }
+}
+
+item(FEAT_CARGOS, cargo_agricultural_supplies, 42) {
+    property {
+        number: 42;
+        cargo_label: "AGRI";
+        type_name: string(STR_CARGO_NAME_AGRICULTURAL_SUPPLIES);
+        unit_name: string(STR_CARGO_UNIT_AGRICULTURAL_SUPPLIES);
+        type_abbreviation: string(STR_CARGO_ABBREV_AGRICULTURAL_SUPPLIES);
+        weight: 1.0;
+        is_freight: 1;
+        cargo_classes: bitmask(CC_PIECE_GOODS);
+        town_growth_effect: TOWNGROWTH_NONE;
+    }
+}
+
+item(FEAT_CARGOS, cargo_technology_systems, 43) {
+    property {
+        number: 43;
+        cargo_label: "TECH";
+        type_name: string(STR_CARGO_NAME_TECHNOLOGY_SYSTEMS);
+        unit_name: string(STR_CARGO_UNIT_TECHNOLOGY_SYSTEMS);
+        type_abbreviation: string(STR_CARGO_ABBREV_TECHNOLOGY_SYSTEMS);
+        weight: 1.0;
+        is_freight: 1;
+        cargo_classes: bitmask(CC_PIECE_GOODS);
+        town_growth_effect: TOWNGROWTH_NONE;
+    }
+}
+
+item(FEAT_CARGOS, cargo_fuel, 44) {
+    property {
+        number: 44;
+        cargo_label: "FUEL";
+        type_name: string(STR_CARGO_NAME_FUEL);
+        unit_name: string(STR_CARGO_UNIT_FUEL);
+        type_abbreviation: string(STR_CARGO_ABBREV_FUEL);
+        weight: 1.0;
+        is_freight: 1;
+        cargo_classes: bitmask(CC_LIQUID);
+        town_growth_effect: TOWNGROWTH_NONE;
+    }
+}
+
+item(FEAT_CARGOS, cargo_personnel, 45) {
+    property {
+        number: 45;
+        cargo_label: "PERS";
+        type_name: string(STR_CARGO_NAME_PERSONNEL);
+        unit_name: string(STR_CARGO_UNIT_PERSONNEL);
+        type_abbreviation: string(STR_CARGO_ABBREV_PERSONNEL);
+        weight: 1.0;
+        is_freight: 1;
+        cargo_classes: bitmask(CC_PASSENGERS);
+        town_growth_effect: TOWNGROWTH_NONE;
     }
 }
