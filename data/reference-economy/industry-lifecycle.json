@@ -1,0 +1,35 @@
+{
+  "$schema": "https://github.com/jj-ervin/core-economy/schema/industry-lifecycle.schema.json",
+  "version": "0.4.1",
+  "horizon": {"start": 1700, "end": 2299},
+  "era_boundaries": [1700, 1850, 2000, 2150, 2300],
+  "era_end_semantics": "inclusive",
+  "rules": {"default_lifecycle": "persistent", "successor_does_not_delete_predecessor": true, "industry_end_2150_requires_review": true},
+  "industries": {
+    "AGR_FARM_TRAD": "transforming", "AGR_FARM_MECH": "transforming", "AGR_FARM_PREC": "transforming", "AGR_FARM_AUTO": "persistent",
+    "FOR_TRAD": "transforming", "FOR_IND": "transforming", "FOR_MECH": "transforming", "FOR_PREC": "persistent",
+    "FIS_COAST": "transforming", "FIS_COMM": "transforming", "FIS_ADV": "persistent",
+    "MIN_COAL_EARLY": "transforming", "MIN_COAL_MECH": "transforming", "MIN_COAL_MOD": "declining",
+    "MIN_IRON": "transforming", "MIN_IRON_MECH": "persistent", "MIN_COPPER": "transforming", "MIN_COPPER_AUTO": "persistent",
+    "MIN_QUARRY": "persistent", "MIN_CLAY": "persistent", "MIN_OIL_ON": "declining", "MIN_GAS_ON": "declining",
+    "PRC_COKE": "persistent", "PRC_STEEL": "transforming", "PRC_STEEL_ADV": "persistent", "PRC_COPPER": "transforming", "PRC_COPPER_ADV": "persistent",
+    "PRC_GLASS": "persistent", "PRC_CERAMICS": "persistent", "PRC_ALUMINUM": "persistent", "PRC_TITANIUM": "persistent", "PRC_PRECIOUS_METALS": "persistent", "PRC_RARE_EARTH": "persistent",
+    "PRC_FOOD": "transforming", "PRC_FOOD_ADV": "persistent", "PRC_SAWMILL": "transforming", "PRC_SAWMILL_AUTO": "persistent",
+    "PRC_REFINERY": "declining", "PRC_REFINERY_ADV": "transforming", "PRC_CHEM": "transforming", "PRC_CHEM_ADV": "persistent",
+    "MFG_MACH": "transforming", "MFG_MACH_ADV": "persistent", "MFG_FACTORY": "transforming", "MFG_FACTORY_ADV": "persistent",
+    "MFG_ELECTRONICS": "transforming", "MFG_ELECTRONICS_ADV": "persistent", "MFG_ADVANCED": "persistent",
+    "SUP_CONSTRUCTION": "persistent", "SUP_TOOLS": "persistent", "SUP_INDUSTRIAL": "persistent", "SUP_AGRICULTURE": "persistent", "SUP_FUEL": "transforming", "SUP_TECH": "persistent",
+    "OFF_PLATFORM_OIL": "declining", "OFF_PLATFORM_ADV": "persistent",
+    "POR_TRADING": "persistent", "POR_COMMERCIAL": "persistent", "POR_INDUSTRIAL": "persistent", "POR_FISHING": "persistent", "POR_DEEPWATER": "persistent", "POR_CONTAINER": "persistent", "POR_MEGA": "persistent",
+    "OFF_SUPPLY_BASE": "persistent", "FIN_SYSTEM": "persistent"
+  },
+  "sector_rules": {"agriculture":"persistent_sector","forestry":"persistent_sector","construction":"persistent_sector","food":"persistent_sector","ports":"persistent_infrastructure","heavy_industry":"persistent_or_transforming","energy":"transforming_with_decline","materials":"persistent_or_transforming","manufacturing":"persistent_or_transforming","technology":"persistent_or_emerging","financial":"persistent_service"},
+  "required_future_work": [
+    "Extend or replace industry variants that currently end at 2150 so the 2150-2299 era has explicit coverage.",
+    "Add a coherent cement/lime/concrete construction-material chain.",
+    "Define post-2150 energy and refinery roles without assuming immediate extinction.",
+    "Resolve the canonical industry count discrepancy: economy.json currently enumerates 65 industry IDs while project documentation has claimed 68 industries.",
+    "Separate economic lifecycle from legacy NML-oriented lifecycle values.",
+    "Validate predecessor/successor reciprocity and prevent successor links from implying deletion."
+  ]
+}

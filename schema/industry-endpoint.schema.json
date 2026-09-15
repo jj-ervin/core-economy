@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "OpenTTD Economy Industry Endpoint Contract",
+  "type": "object",
+  "required": ["version", "horizon", "terminal_industries"],
+  "additionalProperties": false,
+  "properties": {
+    "$schema": {"type": "string"},
+    "version": {"type": "string"},
+    "horizon": {
+      "type": "object",
+      "required": ["start", "end"],
+      "additionalProperties": false,
+      "properties": {"start": {"type": "integer"}, "end": {"type": "integer"}}
+    },
+    "endpoint_semantics": {"type": "string"},
+    "terminal_industries": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "required": ["action", "coverage_end"],
+        "additionalProperties": false,
+        "properties": {
+          "action": {"enum": ["continue", "transform", "decline", "phase_out"]},
+          "coverage_end": {"type": "integer"}
+        }
+      }
+    }
+  }
+}

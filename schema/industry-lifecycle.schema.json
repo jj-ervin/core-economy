@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/jj-ervin/core-economy/schema/industry-lifecycle.schema.json",
+  "title": "Core Economy Industry Lifecycle Model",
+  "type": "object",
+  "required": ["version", "horizon", "era_boundaries", "era_end_semantics", "rules", "industries"],
+  "additionalProperties": false,
+  "properties": {
+    "$schema": {"type": "string"},
+    "version": {"type": "string"},
+    "horizon": {"type": "object", "required": ["start", "end"], "additionalProperties": false, "properties": {"start": {"type": "integer"}, "end": {"type": "integer"}}},
+    "era_boundaries": {"type": "array", "minItems": 5, "maxItems": 5, "items": {"type": "integer"}},
+    "era_end_semantics": {"const": "inclusive"},
+    "rules": {"type": "object", "required": ["default_lifecycle", "successor_does_not_delete_predecessor", "industry_end_2150_requires_review"], "additionalProperties": false, "properties": {"default_lifecycle": {"enum": ["persistent", "transforming", "emerging", "declining", "phase_out"]}, "successor_does_not_delete_predecessor": {"type": "boolean"}, "industry_end_2150_requires_review": {"type": "boolean"}}},
+    "industries": {"type": "object", "additionalProperties": {"enum": ["persistent", "transforming", "emerging", "declining", "phase_out"]}},
+    "sector_rules": {"type": "object", "additionalProperties": {"type": "string"}},
+    "required_future_work": {"type": "array", "items": {"type": "string"}}
+  }
+}
