@@ -30,15 +30,11 @@ jobs:
       - name: Validate Core Economy contract
         run: python tools/validate_economy.py
 
-      - name: Assemble modular NML entry point
-        run: python tools/build_newgrf.py
+      - name: Assemble and compile OpenTTD NewGRF
+        run: python tools/build_newgrf.py --compile --output games/openttd/newgrf/core_economy.grf
 
       - name: Validate playable core chain
         run: python tools/validate_playable_chain.py
-
-      - name: Compile OpenTTD NewGRF
-        run: |
-          nmlc -o games/openttd/newgrf/core_economy.grf --lang=games/openttd/newgrf/lang games/openttd/newgrf/core_economy.nml
 
       - name: Package distribution archive
         run: |
